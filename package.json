@@ -1,0 +1,62 @@
+{
+  "name": "babel-plugin-auto-logger",
+  "description": "Babel Plugin that will automatically add logging",
+  "repository": "https://github.com/darkyndy/babel-plugin-auto-logger",
+  "license": "MIT",
+  "private": true,
+  "main": "lib/index.js",
+  "author": "darkyndy",
+  "dependencies": {
+    "@babel/types": "7.0.0-beta.52"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.0.0-beta.52",
+    "@babel/core": "7.0.0-beta.52",
+    "@babel/helper-plugin-utils": "7.0.0-beta.52",
+    "@babel/preset-env": "7.0.0-beta.52",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "23.2.0",
+    "jest": "23.2.0",
+    "rimraf": "2.6.2"
+  },
+  "peerDependencies": {
+    "@babel/core": ">=7.0.0-beta.52"
+  },
+  "scripts": {
+    "build": "npm run test-coverage && npm run compile",
+    "compile": "rimraf lib && babel src --out-dir lib",
+    "test": "jest",
+    "test-watch": "npm run test -- --watch",
+    "test-coverage": "npm run test -- --coverage"
+  },
+  "jest": {
+    "testRegex": "/__tests__/.*\\.test\\.js$",
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "coverageDirectory": "<rootDir>/coverage/",
+    "coverageReporters": [
+      "lcov"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
+    "rootDir": "./",
+    "automock": false,
+    "verbose": false
+  },
+  "keywords": [
+    "babel-plugin",
+    "logger",
+    "auto-logger"
+  ],
+  "files": [
+    "lib"
+  ],
+  "version": "0.0.1"
+}
