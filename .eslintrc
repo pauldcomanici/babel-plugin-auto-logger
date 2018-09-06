@@ -1,0 +1,72 @@
+{
+  "env": {
+    "es6": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": 9,
+    "sourceType": "module"
+  },
+  "rules": {
+    "array-callback-return": 2,
+    "block-scoped-var": 2,
+    "class-methods-use-this": 2,
+    "complexity": [2, {
+      "max": 20
+    }],
+    "consistent-return": [2, {
+      "treatUndefinedAsUnspecified": false
+    }],
+    "curly": [2, "all"],
+    "default-case": 2,
+    "dot-location": [2, "property"],
+    "dot-notation": [2, {
+      "allowKeywords": false
+    }],
+    "eqeqeq": [2, "always"],
+    "guard-for-in": 2,
+    "max-classes-per-file": [2, 1],
+    "no-alert": 2,
+    "no-await-in-loop": 2,
+    "no-caller": 2,
+    "no-else-return": [2, {
+      "allowElseIf": false
+    }],
+    "no-empty-function": [2, {
+      "allow": [
+        "generatorMethods"
+      ]
+    }],
+    "no-eq-null": 2,
+    "no-eval": 2,
+    "no-extend-native": 2,
+    "no-extra-bind": 2,
+    "no-extra-label": 2,
+    "no-floating-decimal": 2,
+    "no-implicit-coercion": 2,
+    "no-implicit-globals": 2,
+    "no-implied-eval": 2,
+    "no-template-curly-in-string": 2,
+    "valid-jsdoc": [2, {
+      "matchDescription": "[A-Z]+.{5}.*",
+      "prefer": {
+        "arg": "param",
+        "argument": "param",
+        "class": "constructor",
+        "return": "return",
+        "virtual": "abstract"
+      },
+      "preferType": {
+        "Boolean": "Boolean",
+        "Number": "Number",
+        "object": "Object",
+        "String": "String"
+      },
+      "requireParamDescription": true,
+      "requireParamType": true,
+      "requireReturn": true,
+      "requireReturnDescription": true,
+      "requireReturnType": true
+    }]
+  }
+}
