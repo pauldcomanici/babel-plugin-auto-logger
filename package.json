@@ -3,16 +3,16 @@
   "description": "Babel Plugin that will automatically add logging",
   "repository": "https://github.com/darkyndy/babel-plugin-auto-logger",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "main": "lib/index.js",
   "author": "darkyndy",
   "dependencies": {
+    "@babel/helper-plugin-utils": "7.0.0",
     "@babel/types": "7.0.0"
   },
   "devDependencies": {
     "@babel/cli": "7.0.0",
     "@babel/core": "7.0.0",
-    "@babel/helper-plugin-utils": "7.0.0",
     "@babel/preset-env": "7.0.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "23.4.2",
@@ -57,5 +57,5 @@
   "files": [
     "lib"
   ],
-  "version": "0.0.1"
+  "version": "0.0.2"
 }
