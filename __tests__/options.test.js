@@ -298,6 +298,20 @@ describe('options.js', () => {
       );
     });
 
+    it('when plugin was not provided with logging source and the name is not the default => returns options where source is an empty string', () => {
+      testSpecificMocks.loggingData.source = undefined;
+
+      expect(privateApi.getLoggingData(testSpecificMocks.loggingData)).toEqual(
+        {
+          levels: {
+            loggingLevels: 'loggingLevels',
+          },
+          name: testSpecificMocks.loggingData.name,
+          source: '',
+        }
+      );
+    });
+
     it('when plugin was provided with logging source and with default name => returns options based on defaults, ignoring source', () => {
       testSpecificMocks.loggingData.name = consts.LOGGER_API;
       expect(privateApi.getLoggingData(testSpecificMocks.loggingData)).toEqual(
