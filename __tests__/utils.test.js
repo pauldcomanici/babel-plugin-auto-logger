@@ -6,9 +6,7 @@ import * as types from '@babel/types';
 // services
 import loggingArguments from './../src/arguments';
 // constants
-import {
-  MEMBER_EXPRESSION_CATCH,
-} from './../src/constants';
+import consts from './../src/constants';
 
 // mocks
 jest.mock('@babel/types');
@@ -453,7 +451,7 @@ describe('utils.js', () => {
       };
 
       expect(privateApi.getName(testSpecificMocks.path)).toEqual(
-        MEMBER_EXPRESSION_CATCH
+        consts.MEMBER_EXPRESSION_CATCH
       );
     });
 
@@ -529,7 +527,7 @@ describe('utils.js', () => {
     });
 
     it('if the path represents catch member expression => returns method name for error level', () => {
-      testSpecificMocks.knownData.name = MEMBER_EXPRESSION_CATCH;
+      testSpecificMocks.knownData.name = consts.MEMBER_EXPRESSION_CATCH;
 
       expect(privateApi.getLogLevel(
         testSpecificMocks.path,

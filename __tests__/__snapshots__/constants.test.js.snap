@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`constants.js is an object with plugin constants 1`] = `
+Object {
+  "LOGGER_API": "console",
+  "MEMBER_EXPRESSION_CATCH": "memberExpressionCatch",
+}
+`;

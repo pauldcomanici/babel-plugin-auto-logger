@@ -4,9 +4,7 @@ import * as types from '@babel/types';
 // services
 import loggingArguments from './arguments';
 // constants
-import {
-  MEMBER_EXPRESSION_CATCH,
-} from './constants';
+import consts from './constants';
 
 /**
  * Utils service for the plugin.
@@ -238,7 +236,7 @@ privateApi.getName = (path) => {
     // method expression, part of call expression
     // example:
     //    promiseObj.catch((reason) => {/*code*/})
-    return MEMBER_EXPRESSION_CATCH;
+    return consts.MEMBER_EXPRESSION_CATCH;
   }
 
   return undefined;
@@ -262,7 +260,7 @@ privateApi.getLogLevel = (path, state, knownData) => {
   } = state.babelPluginLoggerSettings.loggingData.levels;
 
   const isCatchClause = types.isCatchClause(path);
-  if (isCatchClause || knownData.name === MEMBER_EXPRESSION_CATCH) {
+  if (isCatchClause || knownData.name === consts.MEMBER_EXPRESSION_CATCH) {
     return error.methodName;
   }
 
