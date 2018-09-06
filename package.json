@@ -51,11 +51,12 @@
   },
   "keywords": [
     "babel-plugin",
+    "babel-plugin-auto-logger",
     "logger",
     "auto-logger"
   ],
   "files": [
     "lib"
   ],
-  "version": "0.0.2"
+  "version": "0.0.3"
 }
