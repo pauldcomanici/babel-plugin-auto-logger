@@ -1,11 +1,17 @@
-# This is Work In Progress
-Plugin can be used as is. More work is needed to have good documentation. 
-
 # babel-plugin-auto-logger
 Babel Plugin that will automatically add logging to your existing JS code.
 
 Are you tired of adding logging calls over and over again?
 This plugin will automatically do it for you.
+
+There are 2 use-cases covered by default:
+1. logging error
+  - uses `error` method
+  - for [try...catch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)
+  - for [Promise.catch()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch)
+2. logging verbose
+  - uses `log` method
+  - every case that is does not log error and is not an arrow function that has only return
 
 ## Installation
 ```sh
@@ -45,6 +51,23 @@ Abstract example with all plugin options:
 ```json
 {
   "loggingData": {
+    "levels": {
+      "debug": {
+        "methodName": "myDebug"
+      },
+      "error": {
+        "methodName": "myError"
+      },
+      "info": {
+        "methodName": "myInfo"
+      },
+      "log": {
+        "methodName": "myLog"
+      },
+      "warn": {
+        "methodName": "myWarn"
+      }
+    },
     "name": "myLogger",
     "source": "path/to/file"
   },
@@ -53,50 +76,89 @@ Abstract example with all plugin options:
 }
 ```
 
+#### loggingData.levels
+- Data type: Object
+- Default value:
+  ```text
+  {
+    debug: {
+      methodName: 'debug',
+    },
+    error: {
+      methodName: 'error',
+    },
+    info: {
+      methodName: 'info',
+    },
+    log: {
+      methodName: 'log',
+    },
+    warn: {
+      methodName: 'warn',
+    },
+  }
+  ```
+- Details:
+  - logging levels are based on [console API](https://developer.mozilla.org/en-US/docs/Web/API/console)
+    - debug
+    - error
+    - info
+    - log
+    - warn
+  - allows you to use your own method names for logging API
+    > Tip: If you want all logging levels to use same method, just set same value for `methodName`
+
+
+##### loggingData.levels.logLevel
+- Data type: Object
+- Default value: specific for every log level
+- Details:
+  - allows you to use your own method name for logging API 
+
 #### loggingData.name
 - Data type: String
 - Default value: `'console'`
 - Details:
-    - usually used in combination with `loggingData.source`
-    - represents the name for default import if `loggingData.source` has truthy value or the name of a service that is globally available
+  - usually used in combination with `loggingData.source`
+  - represents the name for default import if `loggingData.source` has truthy value or the name of a service that is globally available
 
 #### loggingData.source
 - Data type: String
 - Default value: `''` (empty string)
 - Details:
-    - usually used in combination with `loggingData.name`
-    - when it has truthy value it can represent the path or the npm package name to the service that will be imported
+  - usually used in combination with `loggingData.name`
+  - when it has truthy value it can represent the path or the npm package name to the service that will be imported
 
 #### sourceMatcher
 - Data type: String or Array of Strings
 - Default value:
-    ```text
-    [
-      '.*js(x)?$',
-    ]
-    ```
-    source file is any file that ends in `js` or `jsx` (e.g.: `utils.js`, `view.jsx`)
+  ```text
+  [
+    '.*js(x)?$',
+  ]
+  ```
+  source file is any file that ends in `js` or `jsx` (e.g.: `utils.js`, `view.jsx`)
 - Details:
-    - allows you to configure what will be considered as source code
-    - every String represents a RegExp
+  - allows you to configure what will be considered as source code
+  - every String represents a RegExp
 
 #### sourceExcludeMatcher
 - Data type: String or Array of Strings
 - Default value:
-    ```text
-    [
-      '__fixtures__',
-      '__mocks__',
-      '__tests__',
-      '__snapshots__',
-      'node_modules',
-    ]
-    ```
-    files that will be excluded are the ones that contain in the path above strings
+  ```text
+  [
+    '__fixtures__',
+    '__mocks__',
+    '__tests__',
+    '__snapshots__',
+    'node_modules',
+  ]
+  ```
+  files that will be excluded are the ones that contain in the path above strings
 - Details:
-    - allows you to configure what will be excluded from source code
-    - every String represents a RegExp
-    - if the pattern matches both the inclusion and exclusion then the pattern will be excluded
+  - allows you to configure what will be excluded from source code
+  - every String represents a RegExp
+  - if the pattern matches both the inclusion and exclusion then the pattern will be excluded
 
 
 ### Control logging API
@@ -133,3 +195,7 @@ If you want to control the API (service) that should be used, you will use `name
 >    return a + b;
 >  }
 >  ```
+
+## Coming soon
+- Ability to use specific logging method depending on the function name
+- Ability to use specific logging method depending on the file path
