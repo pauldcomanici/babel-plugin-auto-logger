@@ -239,6 +239,13 @@ privateApi.getName = (path) => {
     return consts.MEMBER_EXPRESSION_CATCH;
   }
 
+  if (path.inList && Number.isInteger(path.key)) {
+    // anonymous function that is an item of Array
+    // example:
+    //    arr = [(p) => {/*code*/}]
+    return `array-item-${path.key}`;
+  }
+
   return undefined;
 };
 

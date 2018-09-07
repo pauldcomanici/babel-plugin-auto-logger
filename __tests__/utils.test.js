@@ -455,6 +455,17 @@ describe('utils.js', () => {
       );
     });
 
+    it('if the path represents a list (Array) and the key of the item is a valid integer => returns string that contains array index and is prefixed with `array-item`', () => {
+      testSpecificMocks.path = {
+        inList: true,
+        key: 2,
+      };
+
+      expect(privateApi.getName(testSpecificMocks.path)).toBe(
+        'array-item-2'
+      );
+    });
+
     it('if it does not match any known case => returns `undefined`', () => {
       expect(privateApi.getName(testSpecificMocks.path)).toBeUndefined();
     });

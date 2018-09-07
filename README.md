@@ -2,7 +2,10 @@
 Plugin can be used as is. More work is needed to have good documentation. 
 
 # babel-plugin-auto-logger
-Babel Plugin that will automatically add logging to your existing JS code
+Babel Plugin that will automatically add logging to your existing JS code.
+
+Are you tired of adding logging calls over and over again?
+This plugin will automatically do it for you.
 
 ## Installation
 ```sh
@@ -115,7 +118,7 @@ If you want to control the API (service) that should be used, you will use `name
   ]
 }
 ```
-> Based on above config, code that exists under path `src/code.js``:
+> Based on above config, code that exists under path `src/code.js`:
 >  ```javascript
 >  function x(a, b) {
 >    return a + b;
