@@ -22,8 +22,9 @@
   },
   "peerDependencies": {},
   "scripts": {
-    "build": "npm run test-coverage && npm run compile",
+    "build": "npm run lint && npm run test-coverage && npm run compile",
     "compile": "rimraf lib && babel src --out-dir lib",
+    "lint": "eslint ./src",
     "prepublishOnly": "npm run build",
     "test": "jest",
     "test-watch": "npm run test -- --watch",

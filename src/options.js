@@ -22,8 +22,6 @@ const service = {};
 /**
  * Get regular expression based on provided matcher
  *
- * @private
- *
  * @param {String|Array<String>} matcher - string or array with strings based on which regular expression is created
  * @param {String} matcherName - name of the property
  * @param {Array<String>} defaultMatcher - default value for matcher
@@ -60,7 +58,6 @@ privateApi.getMatcher = (matcher, matcherName, defaultMatcher = []) => {
 /**
  * Get default value for sourceMatcher.
  *
- * @private
  * @default
  *
  * @return {Array<String>} defaultSourceMatcher
@@ -74,7 +71,6 @@ privateApi.getSourceMatcher = () => (
 /**
  * Get default value for sourceExcludeMatcher.
  *
- * @private
  * @default
  *
  * @return {Array<String>} defaultSourceExcludeMatcher
@@ -92,7 +88,6 @@ privateApi.getSourceExcludeMatcher = () => (
 /**
  * Get supported log levels by the plugin
  *
- * @private
  * @default
  *
  * @return {Array<String>} defaultLogLevels
@@ -107,8 +102,6 @@ privateApi.getSupportedLogLevels = () => ([
 
 /**
  * Prepare logging level settings.
- *
- * @private
  *
  * @param {String} logLevel - log level
  * @param {LoggerLevelObj} logLevelData - logging level options
@@ -129,8 +122,6 @@ privateApi.getLogLevelData = (logLevel, logLevelData) => {
  * Prepare logging levels.
  * It will check every log level and prepared settings for it.
  *
- * @private
- *
  * @param {Object} loggingLevels - logging levels
  * @return {Object} options - object with options got the logging levels
  */
@@ -150,8 +141,6 @@ privateApi.getLoggingLevels = (loggingLevels) => {
 /**
  * Prepare options for the logger.
  * It will set the source, name, map for levels
- *
- * @private
  *
  * @param {LoggerDataObj} loggingData - logging data
  * @return {Object} options - object with options for logging data

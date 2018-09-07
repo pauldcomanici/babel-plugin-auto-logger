@@ -24,8 +24,6 @@ const service = {};
 /**
  * Test based on a bodyNode if logging was added
  *
- * @private
- *
  * @param {Object} bodyNode - node path for an item from the body
  * @param {Object} state - node state
  * @return {Boolean} hasLogging
@@ -67,8 +65,6 @@ privateApi.hasLogging = (bodyNode, state) => {
 /**
  * Test if in the provided path we can add logging. It will check if logger wasn't added.
  *
- * @private
- *
  * @param {Object} path - node path
  * @param {Object} state - node state
  * @return {Boolean} canBeAdded
@@ -90,8 +86,6 @@ privateApi.canBeAdded = (path, state) => {
 
 /**
  * Get path where the logger should be inserted
- *
- * @private
  *
  * @param {Object} path - node path
  * @return {Object|undefined} insertPath - path
@@ -121,8 +115,6 @@ privateApi.getPathForInsert = (path) => {
 /**
  * Get path location. It will return an object with line and column.
  *
- * @private
- *
  * @param {Object} path - node path
  * @return {Object} locationObj
  */
@@ -145,8 +137,6 @@ privateApi.getLocation = (path) => {
 /**
  * Get the name for the path where we want to call logger.
  * If the node under path represents a function will return function name
- *
- * @private
  *
  * @param {Object} path - node path
  * @return {String|undefined} name - function name if found
@@ -251,8 +241,6 @@ privateApi.getName = (path) => {
 
 /**
  * Get log level that should be used based on path and state.
- *
- * @private
  *
  * @param {Object} path - node path
  * @param {Object} state - node state
