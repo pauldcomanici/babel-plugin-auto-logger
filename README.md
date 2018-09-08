@@ -78,6 +78,18 @@ Abstract example with all plugin options:
 }
 ```
 
+#### loggingData.levelForTryCatch
+- Data type: String
+- Default value: `error`
+- Details:
+  - controls what log level will be used inside the catch block
+
+#### loggingData.levelForMemberExpressionCatch
+- Data type: String
+- Default value: `error`
+- Details:
+  - controls what log level will be used inside the block for catch that is a member of an expression (e.g. Promise.catch())
+
 #### loggingData.levels
 - Data type: Object
 - Default value:
