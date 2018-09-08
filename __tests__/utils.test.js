@@ -483,13 +483,14 @@ describe('utils.js', () => {
       testSpecificMocks.state = {
         babelPluginLoggerSettings: {
           loggingData: {
+            levelForMemberExpressionCatch: 'debug',
+            levelForTryCatch: 'info',
             levels: {
               debug: {
                 methodName: 'debugMethod',
               },
               error: {
                 methodName: 'errorMethod',
-
               },
               info: {
                 methodName: 'infoMethod',
@@ -525,7 +526,7 @@ describe('utils.js', () => {
       );
     });
 
-    it('if the path represents a catch clause => returns method name for error level', () => {
+    it('if the path represents a catch clause => returns method name based on level from `levelForTryCatch`', () => {
       types.isCatchClause.mockReturnValueOnce(true);
 
       expect(privateApi.getLogLevel(
@@ -533,11 +534,11 @@ describe('utils.js', () => {
         testSpecificMocks.state,
         testSpecificMocks.knownData
       )).toEqual(
-        'errorMethod'
+        'infoMethod'
       );
     });
 
-    it('if the path represents catch member expression => returns method name for error level', () => {
+    it('if the path represents catch member expression => returns method name on level from `levelForMemberExpressionCatch`', () => {
       testSpecificMocks.knownData.name = consts.MEMBER_EXPRESSION_CATCH;
 
       expect(privateApi.getLogLevel(
@@ -545,7 +546,7 @@ describe('utils.js', () => {
         testSpecificMocks.state,
         testSpecificMocks.knownData
       )).toEqual(
-        'errorMethod'
+        'debugMethod'
       );
     });
 

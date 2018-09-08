@@ -12,15 +12,29 @@ describe('logging.js', () => {
     testSpecificMocks = {};
   });
 
-  describe('privateApi.getSupportedLogLevels', () => {
-    it('returns an array with strings that represent log levels', () => {
-      expect(privateApi.getSupportedLogLevels()).toEqual(
+  describe('privateApi.logLevels', () => {
+    it('is an object where the key is the log level and the value if the method used for that level when logging', () => {
+      expect(privateApi.logLevels).toEqual(
+        {
+          debug: 'debug',
+          error: 'error',
+          info: 'info',
+          log: 'log',
+          warn: 'warn',
+        }
+      );
+    });
+  });
+
+  describe('privateApi.supportedLogLevels', () => {
+    it('is an array with strings that represent log levels', () => {
+      expect(privateApi.supportedLogLevels).toEqual(
         [
-          'debug',
-          'error',
-          'info',
-          'log',
-          'warn',
+          privateApi.logLevels.debug,
+          privateApi.logLevels.error,
+          privateApi.logLevels.info,
+          privateApi.logLevels.log,
+          privateApi.logLevels.warn,
         ]
       );
     });
@@ -54,71 +68,52 @@ describe('logging.js', () => {
 
   describe('privateApi.getLoggingLevels', () => {
     beforeAll(() => {
-      jest.spyOn(privateApi, 'getSupportedLogLevels').mockReturnValue(['logLevel']);
       jest.spyOn(privateApi, 'getLogLevelData').mockReturnValue({
         logLevelData: 'logLevelData',
       });
     });
     beforeEach(() => {
       testSpecificMocks.loggingLevels = {
-        logLevel: {
-          methodName: 'log',
+        log: {
+          methodName: 'myLog',
         },
       };
     });
     afterEach(() => {
-      privateApi.getSupportedLogLevels.mockClear();
       privateApi.getLogLevelData.mockClear();
     });
     afterAll(() => {
-      privateApi.getSupportedLogLevels.mockRestore();
       privateApi.getLogLevelData.mockRestore();
-    });
-
-    it('retrieves supported log levels by calling `privateApi.getSupportedLogLevels`', () => {
-      privateApi.getLoggingLevels(testSpecificMocks.loggingLevels);
-
-      expect(privateApi.getSupportedLogLevels).toHaveBeenCalledWith();
     });
 
     it('when plugin was provided with settings for every log level => retrieves settings for every supported log level using provided settings by calling `privateApi.getLogLevelData`', () => {
       privateApi.getLoggingLevels(testSpecificMocks.loggingLevels);
 
-      expect(privateApi.getLogLevelData.mock.calls[0]).toEqual(
-        [
-          'logLevel',
-          {
-            methodName: 'log',
-          },
-        ]
-      );
+      expect(privateApi.getLogLevelData.mock.calls).toMatchSnapshot();
     });
 
     it('when plugin was not provided with settings for every log level => retrieves settings for every supported log level using default settings by calling `privateApi.getLogLevelData`', () => {
       testSpecificMocks.loggingLevels = {};
       privateApi.getLoggingLevels(testSpecificMocks.loggingLevels);
 
-      expect(privateApi.getLogLevelData.mock.calls[0]).toEqual(
-        [
-          'logLevel',
-          {
-          },
-        ]
-      );
+      expect(privateApi.getLogLevelData.mock.calls).toMatchSnapshot();
     });
 
     it('returns options for logging, taking in consideration every level', () => {
-      privateApi.getSupportedLogLevels.mockReturnValueOnce(['logLevel', 'debug']);
+      expect(privateApi.getLoggingLevels(testSpecificMocks.loggingLevels)).toMatchSnapshot();
+    });
+  });
 
-      expect(privateApi.getLoggingLevels(testSpecificMocks.loggingLevels)).toEqual(
-        {
-          debug: {
-            logLevelData: 'logLevelData',
-          },
-          logLevel: {
-            logLevelData: 'logLevelData',
-          },
-        }
+  describe('privateApi.getLogLevelForCatch', () => {
+    it('when log level provided is not supported => returns error log level', () => {
+      expect(privateApi.getLogLevelForCatch('not-supported-level')).toBe(
+        privateApi.logLevels.error
+      );
+    });
+
+    it('when log level provided is supported => returns provided log level', () => {
+      expect(privateApi.getLogLevelForCatch(privateApi.logLevels.info)).toBe(
+        privateApi.logLevels.info
       );
     });
   });
@@ -128,9 +123,12 @@ describe('logging.js', () => {
       jest.spyOn(privateApi, 'getLoggingLevels').mockReturnValue({
         loggingLevels: 'loggingLevels',
       });
+      jest.spyOn(privateApi, 'getLogLevelForCatch').mockReturnValue('levelForCatch');
     });
     beforeEach(() => {
       testSpecificMocks.loggingData = {
+        levelForMemberExpressionCatch: 'levelForMemberExpressionCatch',
+        levelForTryCatch: 'levelForTryCatch',
         levels: {
           log: {
             methodName: 'log',
@@ -141,9 +139,11 @@ describe('logging.js', () => {
       };
     });
     afterEach(() => {
+      privateApi.getLogLevelForCatch.mockClear();
       privateApi.getLoggingLevels.mockClear();
     });
     afterAll(() => {
+      privateApi.getLogLevelForCatch.mockRestore();
       privateApi.getLoggingLevels.mockRestore();
     });
 
@@ -156,55 +156,46 @@ describe('logging.js', () => {
     });
 
     it('when plugin was provided with settings => returns options based on provided settings', () => {
-      expect(loggingData.getOptions(testSpecificMocks.loggingData)).toEqual(
-        {
-          levels: {
-            loggingLevels: 'loggingLevels',
-          },
-          name: testSpecificMocks.loggingData.name,
-          source: testSpecificMocks.loggingData.source,
-        }
-      );
+      expect(loggingData.getOptions(testSpecificMocks.loggingData)).toMatchSnapshot();
     });
 
     it('when plugin was not provided with settings => returns options based on defaults', () => {
       testSpecificMocks.loggingData = undefined;
-      expect(loggingData.getOptions(testSpecificMocks.loggingData)).toEqual(
-        {
-          levels: {
-            loggingLevels: 'loggingLevels',
-          },
-          name: consts.LOGGER_API,
-          source: '',
-        }
-      );
+      expect(loggingData.getOptions(testSpecificMocks.loggingData)).toMatchSnapshot();
     });
 
     it('when plugin was not provided with logging source and the name is not the default => returns options where source is an empty string', () => {
       testSpecificMocks.loggingData.source = undefined;
 
-      expect(loggingData.getOptions(testSpecificMocks.loggingData)).toEqual(
-        {
-          levels: {
-            loggingLevels: 'loggingLevels',
-          },
-          name: testSpecificMocks.loggingData.name,
-          source: '',
-        }
-      );
+      expect(loggingData.getOptions(testSpecificMocks.loggingData)).toMatchSnapshot();
     });
 
     it('when plugin was provided with logging source and with default name => returns options based on defaults, ignoring source', () => {
       testSpecificMocks.loggingData.name = consts.LOGGER_API;
-      expect(loggingData.getOptions(testSpecificMocks.loggingData)).toEqual(
-        {
-          levels: {
-            loggingLevels: 'loggingLevels',
-          },
-          name: consts.LOGGER_API,
-          source: '',
-        }
+      expect(loggingData.getOptions(testSpecificMocks.loggingData)).toMatchSnapshot();
+    });
+
+    it('validates value for `levelForMemberExpressionCatch` and `levelForTryCatch` by calling `privateApi.getLogLevelForCatch`', () => {
+      loggingData.getOptions(testSpecificMocks.loggingData);
+
+      expect(privateApi.getLogLevelForCatch.mock.calls).toEqual(
+        [
+          [
+            testSpecificMocks.loggingData.levelForMemberExpressionCatch,
+          ],
+          [
+            testSpecificMocks.loggingData.levelForTryCatch,
+          ],
+        ]
       );
+    });
+
+    it('for `levelForMemberExpressionCatch` and `levelForTryCatch` will set value as it is returned by `privateApi.getLogLevelForCatch`', () => {
+      privateApi.getLogLevelForCatch
+        .mockReturnValueOnce('levelForMemberExpressionCatch')
+        .mockReturnValueOnce('levelForTryCatch');
+
+      expect(loggingData.getOptions(testSpecificMocks.loggingData)).toMatchSnapshot();
     });
   });
 

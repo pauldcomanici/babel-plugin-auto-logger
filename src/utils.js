@@ -250,16 +250,21 @@ privateApi.getName = (path) => {
  */
 privateApi.getLogLevel = (path, state, knownData) => {
   const {
-    error,
-    log,
-  } = state.babelPluginLoggerSettings.loggingData.levels;
+    levelForMemberExpressionCatch,
+    levelForTryCatch,
+    levels,
+  } = state.babelPluginLoggerSettings.loggingData;
 
   const isCatchClause = types.isCatchClause(path);
-  if (isCatchClause || knownData.name === consts.MEMBER_EXPRESSION_CATCH) {
-    return error.methodName;
+  if (isCatchClause) {
+    return levels[levelForTryCatch].methodName;
   }
 
-  return log.methodName;
+  if (knownData.name === consts.MEMBER_EXPRESSION_CATCH) {
+    return levels[levelForMemberExpressionCatch].methodName;
+  }
+
+  return levels.log.methodName;
 };
 
 /**

@@ -1,0 +1,133 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`logging.js getOptions for \`levelForMemberExpressionCatch\` and \`levelForTryCatch\` will set value as it is returned by \`privateApi.getLogLevelForCatch\` 1`] = `
+Object {
+  "levelForMemberExpressionCatch": "levelForMemberExpressionCatch",
+  "levelForTryCatch": "levelForTryCatch",
+  "levels": Object {
+    "loggingLevels": "loggingLevels",
+  },
+  "name": "myLogger",
+  "source": "source",
+}
+`;
+
+exports[`logging.js getOptions when plugin was not provided with logging source and the name is not the default => returns options where source is an empty string 1`] = `
+Object {
+  "levelForMemberExpressionCatch": "levelForCatch",
+  "levelForTryCatch": "levelForCatch",
+  "levels": Object {
+    "loggingLevels": "loggingLevels",
+  },
+  "name": "myLogger",
+  "source": "",
+}
+`;
+
+exports[`logging.js getOptions when plugin was not provided with settings => returns options based on defaults 1`] = `
+Object {
+  "levelForMemberExpressionCatch": "levelForCatch",
+  "levelForTryCatch": "levelForCatch",
+  "levels": Object {
+    "loggingLevels": "loggingLevels",
+  },
+  "name": "console",
+  "source": "",
+}
+`;
+
+exports[`logging.js getOptions when plugin was provided with logging source and with default name => returns options based on defaults, ignoring source 1`] = `
+Object {
+  "levelForMemberExpressionCatch": "levelForCatch",
+  "levelForTryCatch": "levelForCatch",
+  "levels": Object {
+    "loggingLevels": "loggingLevels",
+  },
+  "name": "console",
+  "source": "",
+}
+`;
+
+exports[`logging.js getOptions when plugin was provided with settings => returns options based on provided settings 1`] = `
+Object {
+  "levelForMemberExpressionCatch": "levelForCatch",
+  "levelForTryCatch": "levelForCatch",
+  "levels": Object {
+    "loggingLevels": "loggingLevels",
+  },
+  "name": "myLogger",
+  "source": "source",
+}
+`;
+
+exports[`logging.js privateApi.getLoggingLevels returns options for logging, taking in consideration every level 1`] = `
+Object {
+  "debug": Object {
+    "logLevelData": "logLevelData",
+  },
+  "error": Object {
+    "logLevelData": "logLevelData",
+  },
+  "info": Object {
+    "logLevelData": "logLevelData",
+  },
+  "log": Object {
+    "logLevelData": "logLevelData",
+  },
+  "warn": Object {
+    "logLevelData": "logLevelData",
+  },
+}
+`;
+
+exports[`logging.js privateApi.getLoggingLevels when plugin was not provided with settings for every log level => retrieves settings for every supported log level using default settings by calling \`privateApi.getLogLevelData\` 1`] = `
+Array [
+  Array [
+    "debug",
+    Object {},
+  ],
+  Array [
+    "error",
+    Object {},
+  ],
+  Array [
+    "info",
+    Object {},
+  ],
+  Array [
+    "log",
+    Object {},
+  ],
+  Array [
+    "warn",
+    Object {},
+  ],
+]
+`;
+
+exports[`logging.js privateApi.getLoggingLevels when plugin was provided with settings for every log level => retrieves settings for every supported log level using provided settings by calling \`privateApi.getLogLevelData\` 1`] = `
+Array [
+  Array [
+    "debug",
+    Object {},
+  ],
+  Array [
+    "error",
+    Object {},
+  ],
+  Array [
+    "info",
+    Object {},
+  ],
+  Array [
+    "log",
+    Object {
+      "methodName": "myLog",
+    },
+  ],
+  Array [
+    "warn",
+    Object {},
+  ],
+]
+`;

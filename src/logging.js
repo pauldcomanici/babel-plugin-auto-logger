@@ -18,19 +18,32 @@ const privateApi = {};
 const service = {};
 
 /**
- * Get supported log levels by the plugin
+ * All log levels
  *
  * @default
- *
- * @return {Array<String>} defaultLogLevels
+ * @type {Object}
  */
-privateApi.getSupportedLogLevels = () => ([
-  'debug',
-  'error',
-  'info',
-  'log',
-  'warn',
-]);
+privateApi.logLevels = {
+  debug: 'debug',
+  error: 'error',
+  info: 'info',
+  log: 'log',
+  warn: 'warn',
+};
+
+/**
+ * Supported log levels by the plugin
+ *
+ * @default
+ * @type {Array<String>}
+ */
+privateApi.supportedLogLevels = [
+  privateApi.logLevels.debug,
+  privateApi.logLevels.error,
+  privateApi.logLevels.info,
+  privateApi.logLevels.log,
+  privateApi.logLevels.warn,
+];
 
 /**
  * Prepare logging level settings.
@@ -60,15 +73,25 @@ privateApi.getLogLevelData = (logLevel, logLevelData) => {
 privateApi.getLoggingLevels = (loggingLevels) => {
   const options = {};
 
-  const supportedLogLevels = privateApi.getSupportedLogLevels();
-
-  supportedLogLevels.forEach((logLevel) => {
+  privateApi.supportedLogLevels.forEach((logLevel) => {
     const logLevelData = loggingLevels && loggingLevels[logLevel] || {};
     options[logLevel] = privateApi.getLogLevelData(logLevel, logLevelData);
   });
 
   return options;
 };
+
+/**
+ * Get log level for catch block or when catch is a member of expression.
+ * If log level provided is valid will use it, if not will use default (error).
+ *
+ * @param {String} [levelForCatch] - logging level received as option
+ * @return {String} levelForCatch - level that will be used for specific catch case
+ */
+privateApi.getLogLevelForCatch = (levelForCatch) => (
+  privateApi.supportedLogLevels.includes(levelForCatch) ?
+    levelForCatch : privateApi.logLevels.error
+);
 
 /**
  * Prepare options for the logger.
@@ -80,6 +103,8 @@ privateApi.getLoggingLevels = (loggingLevels) => {
 service.getOptions = (loggingData) => {
   const options = {};
   const {
+    levelForMemberExpressionCatch,
+    levelForTryCatch,
     levels,
     name,
     source,
@@ -92,6 +117,8 @@ service.getOptions = (loggingData) => {
   } else {
     options.source = source || '';
   }
+  options.levelForMemberExpressionCatch = privateApi.getLogLevelForCatch(levelForMemberExpressionCatch);
+  options.levelForTryCatch = privateApi.getLogLevelForCatch(levelForTryCatch);
   options.levels = privateApi.getLoggingLevels(levels);
 
   return options;

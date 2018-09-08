@@ -24,6 +24,8 @@
  * Plugin Settings for logging data
  *
  * @typedef {Object} LoggerDataObj
+ * @property {String} [levelForMemberExpressionCatch] - logging level that should be used when `catch` is a member of an expression (e.g. Promise.catch)
+ * @property {String} [levelForTryCatch] - logging level that should be used in `catch` block
  * @property {String} [source] - logger source, npm package
  * @property {String} [name='console'] - logger name, name for the import, if is not specified or it is 'console' no import will be made
  * @property {LoggerLevelsObj} levels - object with log levels

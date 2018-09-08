@@ -6,12 +6,12 @@ This plugin will automatically do it for you.
 
 There are 2 use-cases covered by default:
 1. logging error
-  - uses `error` method
-  - for [try...catch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)
-  - for [Promise.catch()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch)
+    - uses `error` method
+    - for [try...catch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)
+    - for [Promise.catch()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch)
 2. logging verbose
-  - uses `log` method
-  - every case that is does not log error and is not an arrow function that has only return
+    - uses `log` method
+    - every case that is does not log error and is not an arrow function that has only return
 
 ## Installation
 ```sh
@@ -51,6 +51,8 @@ Abstract example with all plugin options:
 ```json
 {
   "loggingData": {
+    "levelForTryCatch": "error",
+    "levelForMemberExpressionCatch": "error",
     "levels": {
       "debug": {
         "methodName": "myDebug"
