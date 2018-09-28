@@ -1,0 +1,7 @@
+{
+  "testRegex": "/fixtures/.*/input.js$",
+  "rootDir": "./",
+  "automock": false,
+  "verbose": false,
+  "setupTestFrameworkScriptFile": "<rootDir>/index.js"
+}
