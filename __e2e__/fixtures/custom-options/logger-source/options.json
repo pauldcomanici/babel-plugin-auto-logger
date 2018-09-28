@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    [
+      "./../../../../lib/",
+      {
+        "loggingData": {
+          "name": "myLogger",
+          "source": "path/to/file"
+        }
+      }
+    ]
+  ]
+}

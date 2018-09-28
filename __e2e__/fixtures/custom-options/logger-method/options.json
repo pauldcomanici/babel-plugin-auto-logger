@@ -1,0 +1,32 @@
+{
+  "plugins": [
+    [
+      "./../../../../lib/",
+      {
+        "loggingData": {
+          "levelForTryCatch": "debug",
+          "levelForMemberExpressionCatch": "info",
+          "levels": {
+            "debug": {
+              "methodName": "myDebug"
+            },
+            "error": {
+              "methodName": "myError"
+            },
+            "info": {
+              "methodName": "myInfo"
+            },
+            "log": {
+              "methodName": "myLog"
+            },
+            "warn": {
+              "methodName": "myWarn"
+            }
+          },
+          "name": "myLogger",
+          "source": "path/to/file"
+        }
+      }
+    ]
+  ]
+}
