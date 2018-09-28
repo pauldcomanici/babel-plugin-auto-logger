@@ -1,0 +1,21 @@
+{
+  "testRegex": "/__tests__/.*\\.test\\.js$",
+  "collectCoverageFrom": [
+    "src/**/*.js"
+  ],
+  "coverageDirectory": "<rootDir>/coverage/",
+  "coverageReporters": [
+    "lcov"
+  ],
+  "coverageThreshold": {
+    "global": {
+      "branches": 100,
+      "functions": 100,
+      "lines": 100,
+      "statements": 100
+    }
+  },
+  "rootDir": "./../",
+  "automock": false,
+  "verbose": false
+}
