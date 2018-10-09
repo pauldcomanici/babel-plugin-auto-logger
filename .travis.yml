@@ -1,9 +1,23 @@
-before_install:
-  - npm i -g npm
+#before_install:
+#  - npm i -g npm@version
+sudo: false
 cache:
   directories:
     - "node_modules"
 language: node_js
 node_js:
   - "node"
-sudo: false
+
+jobs:
+  include:
+    - stage: validity
+      name: "Linting"
+      script: npm run lint
+    - stage: validity
+      name: "Unit tests"
+      script: npm run test-coverage && npm run report-coverage
+    - stage: validity
+      name: "E2E tests"
+      script: npm run test-e2e
+    - stage: compile
+      script: npm run lint

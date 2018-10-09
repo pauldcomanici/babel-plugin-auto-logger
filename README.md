@@ -1,3 +1,12 @@
+<p align="center">
+  <a href="https://travis-ci.org/darkyndy/babel-plugin-auto-logger">
+    <img alt="Travis Status" src="https://travis-ci.org/darkyndy/babel-plugin-auto-logger.svg?branch=master">
+  </a>
+  <a href="https://codecov.io/gh/darkyndy/babel-plugin-auto-logger">
+    <img alt="Coverage Status" src="https://codecov.io/gh/darkyndy/babel-plugin-auto-logger/branch/master/graph/badge.svg" />
+  </a>
+</p>
+
 # babel-plugin-auto-logger
 Babel Plugin that will automatically add logging to your existing JS code.
 

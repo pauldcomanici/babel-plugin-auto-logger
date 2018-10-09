@@ -17,6 +17,7 @@
     "@babel/preset-env": "7.1.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "23.6.0",
+    "codecov": "3.1.0",
     "eslint": "5.6.0",
     "jest": "23.6.0",
     "rimraf": "2.6.2"
@@ -27,6 +28,7 @@
     "compile": "rimraf lib && babel src --out-dir lib",
     "lint": "eslint ./src",
     "prepublishOnly": "npm run build",
+    "report-coverage": "codecov",
     "test": "jest --config=./config/jest-ut.json",
     "test-e2e": "jest --config=./__e2e__/jest.json",
     "test-e2e-latest": "npm run compile && npm run test-e2e",
