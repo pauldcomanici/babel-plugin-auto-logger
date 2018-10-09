@@ -1,0 +1,9 @@
+before_install:
+  - npm i -g npm
+cache:
+  directories:
+    - "node_modules"
+language: node_js
+node_js:
+  - "node"
+sudo: false
