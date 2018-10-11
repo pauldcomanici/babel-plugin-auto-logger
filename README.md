@@ -5,6 +5,9 @@
   <a href="https://codecov.io/gh/darkyndy/babel-plugin-auto-logger">
     <img alt="Coverage Status" src="https://codecov.io/gh/darkyndy/babel-plugin-auto-logger/branch/master/graph/badge.svg" />
   </a>
+  <a href="https://www.npmjs.com/package/babel-plugin-auto-logger">
+    <img alt="npm Downloads" src="https://img.shields.io/npm/dm/babel-plugin-auto-logger.svg?maxAge=57600">
+  </a>
 </p>
 
 # babel-plugin-auto-logger

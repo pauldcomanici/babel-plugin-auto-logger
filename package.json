@@ -8,17 +8,17 @@
   "author": "darkyndy",
   "dependencies": {
     "@babel/helper-plugin-utils": "7.0.0",
-    "@babel/types": "7.0.0"
+    "@babel/types": "7.1.2"
   },
   "devDependencies": {
-    "@babel/cli": "7.1.0",
-    "@babel/core": "7.1.0",
+    "@babel/cli": "7.1.2",
+    "@babel/core": "7.1.2",
     "@babel/helper-plugin-test-runner": "7.1.0",
     "@babel/preset-env": "7.1.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "23.6.0",
     "codecov": "3.1.0",
-    "eslint": "5.6.0",
+    "eslint": "5.6.1",
     "jest": "23.6.0",
     "rimraf": "2.6.2"
   },
