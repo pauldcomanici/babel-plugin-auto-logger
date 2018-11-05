@@ -8,7 +8,7 @@
   "author": "darkyndy",
   "dependencies": {
     "@babel/helper-plugin-utils": "7.0.0",
-    "@babel/types": "7.1.2"
+    "@babel/types": "7.1.3"
   },
   "devDependencies": {
     "@babel/cli": "7.1.2",
