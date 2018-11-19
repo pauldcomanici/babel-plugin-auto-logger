@@ -9,6 +9,10 @@
 > - :nail_care:  [Polish]
 
 
+## v0.5.0
+* :house: Update dependencies
+* :rocket: When preparing source file path keep it based on project root
+
 ## v0.4.0
 * :house: Add e2e tests that will help with documentation and finding regressions
 * :house: Extract jest from package.json to allow multiple configurations
