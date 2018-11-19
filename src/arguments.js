@@ -30,9 +30,14 @@ privateApi.getDefault = (state, knownData) => {
   const {
     sourceFileName,
     sourceMapTarget,
+    root,
   } = state.file.opts;
 
-  const sourceFile = sourceMapTarget || sourceFileName;
+  let sourceFile = sourceMapTarget || sourceFileName;
+  if (root) {
+    // extract root path from source path
+    sourceFile = sourceFile.replace(root, '');
+  }
 
   // build first argument, will contain file name, line number and column number
   const firstArg = `[${sourceFile}:${knownData.line}:${knownData.column}]`;

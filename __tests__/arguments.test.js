@@ -58,6 +58,18 @@ describe('arguments.js', () => {
       );
     });
 
+    it('prepares source file path by extracting root path from it when root has truthy value', () => {
+      testSpecificMocks.state.file.opts.sourceMapTarget = undefined;
+      testSpecificMocks.state.file.opts.root = '/path/to/file';
+      privateApi.getDefault(testSpecificMocks.state, testSpecificMocks.knownData);
+
+      expect(types.stringLiteral.mock.calls[0]).toEqual(
+        [
+          '[/file-name.js:22:11]',
+        ]
+      );
+    });
+
     it('prepares string literals that will be used as arguments for the logger method by`calling `types.stringLiteral` (for the first logger argument -> file name with line and column; and a second time for the second argument -> method name)', () => {
       privateApi.getDefault(testSpecificMocks.state, testSpecificMocks.knownData);
 
