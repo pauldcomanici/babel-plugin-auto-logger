@@ -1,15 +1,29 @@
 <p align="center">
-  <a href="https://travis-ci.org/darkyndy/babel-plugin-auto-logger" target="_blank">
-    <img alt="Travis Status" src="https://travis-ci.org/darkyndy/babel-plugin-auto-logger.svg?branch=master">
+  <a href="https://travis-ci.org/darkyndy/babel-plugin-auto-logger">
+    <img
+      alt="Travis Status"
+      src="https://travis-ci.org/darkyndy/babel-plugin-auto-logger.svg?branch=master"
+    />
   </a>
-  <a href="https://codecov.io/gh/darkyndy/babel-plugin-auto-logger" target="_blank">
-    <img alt="Coverage Status" src="https://codecov.io/gh/darkyndy/babel-plugin-auto-logger/branch/master/graph/badge.svg" />
+  <a href="https://codecov.io/gh/darkyndy/babel-plugin-auto-logger">
+    <img
+      alt="Coverage Status"
+      src="https://codecov.io/gh/darkyndy/babel-plugin-auto-logger/branch/master/graph/badge.svg"
+    />
   </a>
-  <a href="https://www.npmjs.com/package/babel-plugin-auto-logger" target="_blank">
-    <img alt="npm Downloads" src="https://img.shields.io/npm/dm/babel-plugin-auto-logger.svg?maxAge=57600">
+  <a href="https://www.npmjs.com/package/babel-plugin-auto-logger">
+    <img
+      alt="npm Downloads"
+      src="https://img.shields.io/npm/dm/babel-plugin-auto-logger.svg?maxAge=57600"
+    />
   </a>
-  <a href="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger?targetFile=package.json" target="_blank">
-    <img src="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger/badge.svg?targetFile=package.json" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger?targetFile=package.json" style="max-width:100%;">
+  <a href="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger?targetFile=package.json">
+    <img
+      alt="Known Vulnerabilities"
+      src="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger/badge.svg?targetFile=package.json"
+      data-canonical-src="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger?targetFile=package.json"
+      style="max-width:100%;"
+    />
   </a>
 </p>
 
