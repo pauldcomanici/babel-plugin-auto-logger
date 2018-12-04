@@ -29,6 +29,10 @@ describe('arguments.js', () => {
       testSpecificMocks.state = {
         file: {
           opts: {
+            parserOpts: {
+              sourceFileName: '/parsed/path/to/file/file-name.js',
+              sourceMapTarget: 'parsed-file-name.js',
+            },
             sourceFileName: '/path/to/file/file-name.js',
             sourceMapTarget: 'file-name.js',
           },
@@ -58,7 +62,46 @@ describe('arguments.js', () => {
       );
     });
 
-    it('prepares source file path by extracting root path from it when root has truthy value', () => {
+    it('when `sourceMapTarget` and `sourceFileName` has falsy value will use `parserOpts.sourceMapTarget` for file name', () => {
+      testSpecificMocks.state.file.opts.sourceFileName = undefined;
+      testSpecificMocks.state.file.opts.sourceMapTarget = undefined;
+      privateApi.getDefault(testSpecificMocks.state, testSpecificMocks.knownData);
+
+      expect(types.stringLiteral.mock.calls[0]).toEqual(
+        [
+          '[parsed-file-name.js:22:11]',
+        ]
+      );
+    });
+
+    it('when `sourceMapTarget`, `sourceFileName` and `parserOpts.sourceMapTarget` has falsy value will use `parserOpts.sourceFileName` for file name', () => {
+      testSpecificMocks.state.file.opts.sourceFileName = undefined;
+      testSpecificMocks.state.file.opts.sourceMapTarget = undefined;
+      testSpecificMocks.state.file.opts.parserOpts.sourceMapTarget = undefined;
+      privateApi.getDefault(testSpecificMocks.state, testSpecificMocks.knownData);
+
+      expect(types.stringLiteral.mock.calls[0]).toEqual(
+        [
+          '[/parsed/path/to/file/file-name.js:22:11]',
+        ]
+      );
+    });
+
+    it('does not update source file name by removing root part when it has falsy value', () => {
+      testSpecificMocks.state.file.opts.sourceFileName = undefined;
+      testSpecificMocks.state.file.opts.sourceMapTarget = undefined;
+      testSpecificMocks.state.file.opts.parserOpts = undefined;
+      testSpecificMocks.state.file.opts.root = '/path/to/file';
+      privateApi.getDefault(testSpecificMocks.state, testSpecificMocks.knownData);
+
+      expect(types.stringLiteral.mock.calls[0]).toEqual(
+        [
+          '[undefined:22:11]',
+        ]
+      );
+    });
+
+    it('prepares source file path by extracting root path from it when root and source file name has truthy value', () => {
       testSpecificMocks.state.file.opts.sourceMapTarget = undefined;
       testSpecificMocks.state.file.opts.root = '/path/to/file';
       privateApi.getDefault(testSpecificMocks.state, testSpecificMocks.knownData);

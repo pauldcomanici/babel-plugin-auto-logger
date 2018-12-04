@@ -28,13 +28,15 @@ const service = {};
  */
 privateApi.getDefault = (state, knownData) => {
   const {
+    parserOpts,
+    root,
     sourceFileName,
     sourceMapTarget,
-    root,
   } = state.file.opts;
 
-  let sourceFile = sourceMapTarget || sourceFileName;
-  if (root) {
+  let sourceFile = sourceMapTarget || sourceFileName ||
+    (parserOpts && (parserOpts.sourceMapTarget || parserOpts.sourceFileName));
+  if (sourceFile && root) {
     // extract root path from source path
     sourceFile = sourceFile.replace(root, '');
   }
