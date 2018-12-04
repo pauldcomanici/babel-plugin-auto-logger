@@ -3,11 +3,17 @@
 > **Tags:**
 > - :boom:       [Breaking Change]
 > - :rocket:     [New Feature]
+> - :lollipop:   [Enhancement]
 > - :bug:        [Bug Fix]
 > - :memo:       [Documentation]
 > - :house:      [Internal]
 > - :nail_care:  [Polish]
 
+
+## v0.6.0
+* :lollipop: When the source file name cannot be determined based on sourceMapTarget or sourceFileName try to check parserOpts object (#2)
+* :house: Update dependencies
+* :house: Add badge for vulnerabilities (based on project dependencies)
 
 ## v0.5.0
 * :house: Update dependencies
