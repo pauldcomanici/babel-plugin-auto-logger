@@ -11,18 +11,36 @@
       src="https://codecov.io/gh/darkyndy/babel-plugin-auto-logger/branch/master/graph/badge.svg"
     />
   </a>
-  <a href="https://www.npmjs.com/package/babel-plugin-auto-logger">
-    <img
-      alt="npm Downloads"
-      src="https://img.shields.io/npm/dm/babel-plugin-auto-logger.svg?maxAge=57600"
-    />
-  </a>
   <a href="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger?targetFile=package.json">
     <img
       alt="Known Vulnerabilities"
       src="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger/badge.svg?targetFile=package.json"
       data-canonical-src="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger?targetFile=package.json"
       style="max-width:100%;"
+    />
+  </a>
+  <a href="https://david-dm.org/darkyndy/babel-plugin-auto-logger">
+    <img
+      alt="dependencies status"
+      src="https://david-dm.org/darkyndy/babel-plugin-auto-logger/status.svg"
+    />
+  </a>
+  <a href="https://david-dm.org/darkyndy/babel-plugin-auto-logger?type=dev">
+    <img
+      alt="devDependencies status"
+      src="https://david-dm.org/darkyndy/babel-plugin-auto-logger/dev-status.svg"
+    />
+  </a>
+  <a href="https://www.npmjs.com/package/babel-plugin-auto-logger">
+    <img
+      alt="npm Downloads"
+      src="https://img.shields.io/npm/dm/babel-plugin-auto-logger.svg?maxAge=57600"
+    />
+  </a>
+  <a href="https://github.com/darkyndy/babel-plugin-auto-logger/blob/master/LICENSE">
+    <img
+      alt="MIT License"
+      src="https://img.shields.io/npm/l/babel-plugin-auto-logger.svg"
     />
   </a>
 </p>
