@@ -4,9 +4,8 @@ import options, {privateApi} from './../src/options';
 // dependencies
 // services
 import loggingData from './../src/logging';
-
-// mocks
 jest.mock('./../src/logging');
+
 
 describe('options.js', () => {
   let testSpecificMocks;

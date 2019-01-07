@@ -44,7 +44,8 @@
  * Plugin known data that is sent as parameter
  *
  * @typedef {Object} LogResourceObj
- * @property {String} column - column number where the source code is located
- * @property {String} line - line number where the source code is located
+ * @property {Number} column - column number where the source code is located
+ * @property {Number} line - line number where the source code is located
  * @property {String} name - name (usually the function name)
+ * @property {String} source - file name, may including path
  */

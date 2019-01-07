@@ -3,6 +3,7 @@ import * as types from '@babel/types';
 
 // services
 import loggingArguments from './arguments';
+import sourceFile from './source-file';
 // constants
 import consts from './constants';
 
@@ -268,6 +269,42 @@ privateApi.getLogLevel = (path, state, knownData) => {
 };
 
 /**
+ * Insert logging.
+ *
+ * @param {Object} path - node path
+ * @param {Object} insertPath - node path where we will add logging
+ * @param {Object} state - node state
+ * @param {LogResourceObj} partialData - object with pre-determined data
+ * @return {undefined}
+ */
+privateApi.insertLogging = (path, insertPath, state, partialData) => {
+  const source = sourceFile.get(state);
+  const knownData = {
+    column: partialData.column,
+    line: partialData.line,
+    name: partialData.name,
+    source,
+  };
+
+  insertPath.unshiftContainer(
+    'body',
+    types.expressionStatement(
+      types.callExpression(
+        types.memberExpression(
+          types.identifier(service.getLoggerName(state)),
+          types.identifier(privateApi.getLogLevel(path, state, knownData))
+        ),
+        loggingArguments.get(
+          path,
+          state,
+          knownData
+        )
+      )
+    )
+  );
+};
+
+/**
  * Get the name of the logger that will be used at import and later on to call methods from it.
  *
  * @param {Object} state - node state
@@ -364,27 +401,15 @@ service.addLogger = (path, state) => {
   const loggerCanBeAdded = privateApi.canBeAdded(insertPath, state);
 
   if (loggerCanBeAdded) {
-    const knownData = {
-      column,
-      line,
-      name,
-    };
-
-    insertPath.unshiftContainer(
-      'body',
-      types.expressionStatement(
-        types.callExpression(
-          types.memberExpression(
-            types.identifier(service.getLoggerName(state)),
-            types.identifier(privateApi.getLogLevel(path, state, knownData))
-          ),
-          loggingArguments.get(
-            path,
-            state,
-            knownData
-          )
-        )
-      )
+    privateApi.insertLogging(
+      path,
+      insertPath,
+      state,
+      {
+        column,
+        line,
+        name,
+      }
     );
 
     return true;

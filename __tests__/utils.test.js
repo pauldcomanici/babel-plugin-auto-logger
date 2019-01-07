@@ -3,13 +3,14 @@ import utils, {privateApi} from './../src/utils';
 
 // dependencies
 import * as types from '@babel/types';
+jest.mock('@babel/types');
 // services
 import loggingArguments from './../src/arguments';
+import sourceFile from './../src/source-file';
+jest.mock('./../src/source-file');
 // constants
 import consts from './../src/constants';
 
-// mocks
-jest.mock('@babel/types');
 
 describe('utils.js', () => {
   let testSpecificMocks;
@@ -561,6 +562,190 @@ describe('utils.js', () => {
     });
   });
 
+  describe('privateApi.insertLogging', () => {
+    beforeAll(() => {
+      jest.spyOn(sourceFile, 'get').mockReturnValue('source-file');
+      jest.spyOn(privateApi, 'getLogLevel').mockReturnValue('debug');
+      jest.spyOn(utils, 'getLoggerName').mockReturnValue('myAwesomeLogger');
+      jest.spyOn(loggingArguments, 'get').mockReturnValue([
+        'arg1',
+        'arg2',
+      ]);
+
+      jest.spyOn(types, 'expressionStatement').mockReturnValue('expressionStatement');
+      jest.spyOn(types, 'callExpression').mockReturnValue('callExpression');
+      jest.spyOn(types, 'memberExpression').mockReturnValue('memberExpression');
+      jest.spyOn(types, 'identifier')
+        .mockReturnValueOnce('loggerName')
+        .mockReturnValueOnce('loggerLevel');
+    });
+    beforeEach(() => {
+      testSpecificMocks.path = {
+        node: {},
+      };
+      testSpecificMocks.insertPath = {
+        node: {},
+        unshiftContainer: jest.fn(),
+      };
+      testSpecificMocks.state = {
+        babelPluginLoggerSettings: {},
+      };
+      testSpecificMocks.partialData = {
+        column: 12,
+        line: 47,
+        name: 'method-name',
+      };
+
+      testSpecificMocks.knownData = {
+        ...testSpecificMocks.partialData,
+        source: 'source-file',
+      }
+    });
+    afterEach(() => {
+      sourceFile.get.mockClear();
+      privateApi.getLogLevel.mockClear();
+      utils.getLoggerName.mockClear();
+      loggingArguments.get.mockClear();
+
+      types.expressionStatement.mockClear();
+      types.callExpression.mockClear();
+      types.memberExpression.mockClear();
+      types.identifier.mockClear();
+    });
+    afterAll(() => {
+      sourceFile.get.mockRestore();
+      privateApi.getLogLevel.mockRestore();
+      utils.getLoggerName.mockRestore();
+      loggingArguments.get.mockRestore();
+
+      types.expressionStatement.mockRestore();
+      types.callExpression.mockRestore();
+      types.memberExpression.mockRestore();
+      types.identifier.mockRestore();
+    });
+
+    it('retrieves source file', () => {
+      privateApi.insertLogging(
+        testSpecificMocks.path,
+        testSpecificMocks.insertPath,
+        testSpecificMocks.state,
+        testSpecificMocks.partialData,
+      );
+
+      expect(sourceFile.get).toHaveBeenCalledWith(
+        testSpecificMocks.state,
+      );
+    });
+
+    it('retrieves expression arguments, result will be used by call expression', () => {
+      privateApi.insertLogging(
+        testSpecificMocks.path,
+        testSpecificMocks.insertPath,
+        testSpecificMocks.state,
+        testSpecificMocks.partialData,
+      );
+
+      expect(loggingArguments.get).toHaveBeenCalledWith(
+        testSpecificMocks.path,
+        testSpecificMocks.state,
+        testSpecificMocks.knownData,
+      );
+    });
+
+    it('retrieves first identifier string for member expression property', () => {
+      privateApi.insertLogging(
+        testSpecificMocks.path,
+        testSpecificMocks.insertPath,
+        testSpecificMocks.state,
+        testSpecificMocks.partialData,
+      );
+
+      expect(utils.getLoggerName).toHaveBeenCalledWith(
+        testSpecificMocks.state,
+      );
+    });
+
+    it('retrieves second identifier string (method name) for member expression property', () => {
+      privateApi.insertLogging(
+        testSpecificMocks.path,
+        testSpecificMocks.insertPath,
+        testSpecificMocks.state,
+        testSpecificMocks.partialData,
+      );
+
+      expect(privateApi.getLogLevel).toHaveBeenCalledWith(
+        testSpecificMocks.path,
+        testSpecificMocks.state,
+        testSpecificMocks.knownData,
+      );
+    });
+
+    it('prepares identifiers for the member expression', () => {
+      privateApi.insertLogging(
+        testSpecificMocks.path,
+        testSpecificMocks.insertPath,
+        testSpecificMocks.state,
+        testSpecificMocks.partialData,
+      );
+
+      expect(types.identifier.mock.calls).toEqual(
+        [
+          [
+            'myAwesomeLogger',
+          ],
+          [
+            'debug',
+          ],
+        ]
+      );
+    });
+
+    it('prepares call expression with a member expression and arguments list', () => {
+      privateApi.insertLogging(
+        testSpecificMocks.path,
+        testSpecificMocks.insertPath,
+        testSpecificMocks.state,
+        testSpecificMocks.partialData,
+      );
+
+      expect(types.callExpression).toHaveBeenCalledWith(
+        'memberExpression',
+        [
+          'arg1',
+          'arg2',
+        ]
+      );
+    });
+
+    it('prepares expression statement, argument is the call expression', () => {
+      privateApi.insertLogging(
+        testSpecificMocks.path,
+        testSpecificMocks.insertPath,
+        testSpecificMocks.state,
+        testSpecificMocks.partialData,
+      );
+
+      expect(types.expressionStatement).toHaveBeenCalledWith(
+        'callExpression'
+      );
+    });
+
+    it('inserts expression statement to the body of the path', () => {
+      privateApi.insertLogging(
+        testSpecificMocks.path,
+        testSpecificMocks.insertPath,
+        testSpecificMocks.state,
+        testSpecificMocks.partialData,
+      );
+
+      expect(testSpecificMocks.insertPath.unshiftContainer).toHaveBeenCalledWith(
+        'body',
+        'expressionStatement'
+      );
+    });
+
+  });
+
   describe('getLoggerName', () => {
     beforeEach(() => {
       testSpecificMocks.state = {
@@ -645,19 +830,7 @@ describe('utils.js', () => {
         line: 72,
       });
       jest.spyOn(privateApi, 'canBeAdded').mockReturnValue(true);
-      jest.spyOn(privateApi, 'getLogLevel').mockReturnValue('debug');
-      jest.spyOn(utils, 'getLoggerName').mockReturnValue('myAwesomeLogger');
-      jest.spyOn(loggingArguments, 'get').mockReturnValue([
-        'arg1',
-        'arg2',
-      ]);
-
-      jest.spyOn(types, 'expressionStatement').mockReturnValue('expressionStatement');
-      jest.spyOn(types, 'callExpression').mockReturnValue('callExpression');
-      jest.spyOn(types, 'memberExpression').mockReturnValue('memberExpression');
-      jest.spyOn(types, 'identifier')
-        .mockReturnValueOnce('loggerName')
-        .mockReturnValueOnce('loggerLevel');
+      jest.spyOn(privateApi, 'insertLogging').mockReturnValue(undefined);
     });
     beforeEach(() => {
       testSpecificMocks.insertPath = {
@@ -678,31 +851,17 @@ describe('utils.js', () => {
       privateApi.getPathForInsert.mockClear();
       privateApi.getLocation.mockClear();
       privateApi.canBeAdded.mockClear();
-      privateApi.getLogLevel.mockClear();
-      utils.getLoggerName.mockClear();
-      loggingArguments.get.mockClear();
-
-      types.expressionStatement.mockClear();
-      types.callExpression.mockClear();
-      types.memberExpression.mockClear();
-      types.identifier.mockClear();
+      privateApi.insertLogging.mockClear();
     });
     afterAll(() => {
       privateApi.getName.mockRestore();
       privateApi.getPathForInsert.mockRestore();
       privateApi.getLocation.mockRestore();
       privateApi.canBeAdded.mockRestore();
-      privateApi.getLogLevel.mockRestore();
-      utils.getLoggerName.mockRestore();
-      loggingArguments.get.mockRestore();
-
-      types.expressionStatement.mockRestore();
-      types.callExpression.mockRestore();
-      types.memberExpression.mockRestore();
-      types.identifier.mockRestore();
+      privateApi.insertLogging.mockRestore();
     });
 
-    it('retrieves the function name by calling `privateApi.getName`', () => {
+    it('retrieves the function name', () => {
       privateApi.getName.mockReturnValueOnce(undefined);
 
       utils.addLogger(testSpecificMocks.path, testSpecificMocks.state);
@@ -712,13 +871,13 @@ describe('utils.js', () => {
       );
     });
 
-    it('if function name is not retrieved => returns false', () => {
+    it('returns false if function name is not retrieved', () => {
       privateApi.getName.mockReturnValueOnce(undefined);
 
       expect(utils.addLogger(testSpecificMocks.path, testSpecificMocks.state)).toBe(false);
     });
 
-    it('if function name is retrieved => retrieve path where logger should be added by calling `privateApi.getPathForInsert`', () => {
+    it('retrieves path where logger should be added if function name is retrieved', () => {
       privateApi.getPathForInsert.mockReturnValueOnce(undefined);
 
       utils.addLogger(testSpecificMocks.path, testSpecificMocks.state);
@@ -728,13 +887,13 @@ describe('utils.js', () => {
       );
     });
 
-    it('if path where logger should be added has falsy value => returns false', () => {
+    it('returns false if path where logger should be added has falsy value', () => {
       privateApi.getPathForInsert.mockReturnValueOnce(undefined);
 
       expect(utils.addLogger(testSpecificMocks.path, testSpecificMocks.state)).toBe(false);
     });
 
-    it('if path where logger should be added has truthy value => retrieves line and column for the code by calling `privateApi.getLocation`', () => {
+    it('retrieves line and column for the code if path where logger should be added has truthy value', () => {
       privateApi.getLocation.mockReturnValueOnce({});
 
       utils.addLogger(testSpecificMocks.path, testSpecificMocks.state);
@@ -744,13 +903,13 @@ describe('utils.js', () => {
       );
     });
 
-    it('if line or column have value as undefined => returns false', () => {
+    it('returns false if line or column have value as undefined', () => {
       privateApi.getLocation.mockReturnValueOnce({});
 
       expect(utils.addLogger(testSpecificMocks.path, testSpecificMocks.state)).toBe(false);
     });
 
-    it('if line and column have value not as undefined => determines if logger can be added for specified path by calling `privateApi.canBeAdded`', () => {
+    it('determines if logger can be added for specified path if line and column do not have value as undefined', () => {
       privateApi.canBeAdded.mockReturnValueOnce(false);
 
       utils.addLogger(testSpecificMocks.path, testSpecificMocks.state);
@@ -761,93 +920,28 @@ describe('utils.js', () => {
       );
     });
 
-    it('if logger cannot be added for specified path => returns false', () => {
+    it('returns false if logger cannot be added for specified path', () => {
       privateApi.canBeAdded.mockReturnValueOnce(false);
 
       expect(utils.addLogger(testSpecificMocks.path, testSpecificMocks.state)).toBe(false);
     });
 
-    it('if logger can be added for specified path => retrieves expression arguments by calling `loggingArguments.get` (result will be used by call expression)', () => {
+    it('inserts logging data if logger can be added for specified path', () => {
       utils.addLogger(testSpecificMocks.path, testSpecificMocks.state);
 
-      expect(loggingArguments.get).toHaveBeenCalledWith(
+      expect(privateApi.insertLogging).toHaveBeenCalledWith(
         testSpecificMocks.path,
+        testSpecificMocks.insertPath,
         testSpecificMocks.state,
         {
           column: 12,
           line: 72,
           name: 'functionName',
-        }
+        },
       );
     });
 
-    it('if logger can be added for specified path => retrieves first identifier string for member expression property by calling `getLoggerName`', () => {
-      utils.addLogger(testSpecificMocks.path, testSpecificMocks.state);
-
-      expect(utils.getLoggerName).toHaveBeenCalledWith(
-        testSpecificMocks.state,
-      );
-    });
-
-    it('if logger can be added for specified path => retrieves second identifier string (method name) for member expression property by calling `privateApi.getLogLevel`', () => {
-      utils.addLogger(testSpecificMocks.path, testSpecificMocks.state);
-
-      expect(privateApi.getLogLevel).toHaveBeenCalledWith(
-        testSpecificMocks.path,
-        testSpecificMocks.state,
-        {
-          column: 12,
-          line: 72,
-          name: 'functionName',
-        }
-      );
-    });
-
-    it('if logger can be added for specified path => prepares identifiers for the member expression by calling `types.identifier` with logger name and logger method', () => {
-      utils.addLogger(testSpecificMocks.path, testSpecificMocks.state);
-
-      expect(types.identifier.mock.calls).toEqual(
-        [
-          [
-            'myAwesomeLogger',
-          ],
-          [
-            'debug',
-          ],
-        ]
-      );
-    });
-
-    it('if logger can be added for specified path => prepares call expression with a member expression and arguments list by calling `types.callExpression`', () => {
-      utils.addLogger(testSpecificMocks.path, testSpecificMocks.state);
-
-      expect(types.callExpression).toHaveBeenCalledWith(
-        'memberExpression',
-        [
-          'arg1',
-          'arg2',
-        ]
-      );
-    });
-
-    it('if logger can be added for specified path => prepares expression statement, argument is the call expression by calling `types.expressionStatement`', () => {
-      utils.addLogger(testSpecificMocks.path, testSpecificMocks.state);
-
-      expect(types.expressionStatement).toHaveBeenCalledWith(
-        'callExpression'
-      );
-    });
-
-    it('if logger can be added for specified path => inserts expression statement to the body of the path by calling `insertPath.unshiftContainer`', () => {
-      utils.addLogger(testSpecificMocks.path, testSpecificMocks.state);
-
-      expect(testSpecificMocks.insertPath.unshiftContainer).toHaveBeenCalledWith(
-        'body',
-        'expressionStatement'
-      );
-    });
-
-    it('if logger can be added for specified path => returns true', () => {
+    it('returns true if logger can be added for specified path', () => {
       expect(utils.addLogger(testSpecificMocks.path, testSpecificMocks.state)).toEqual(true);
     });
   });

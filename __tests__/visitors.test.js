@@ -3,13 +3,12 @@ import visitors from './../src/visitors';
 
 // dependencies
 import * as types from '@babel/types';
+jest.mock('@babel/types');
 // services
 import utils from './../src/utils';
 // constants
 import consts from './../src/constants';
 
-// mocks
-jest.mock('@babel/types');
 
 describe('visitors.js', () => {
   let testSpecificMocks;
