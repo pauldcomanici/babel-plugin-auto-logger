@@ -12,6 +12,7 @@
 
 ## v0.7.0
 :house: add badge for dependencies
+:house: add badge for paypal donate and patreon support
 :house: update project dependencies
 :memo: document how version can be updated
 
