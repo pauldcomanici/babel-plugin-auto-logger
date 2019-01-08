@@ -199,4 +199,14 @@ describe('logging.js', () => {
     });
   });
 
+  describe('getLevels', () => {
+
+    it('returns an object with log levels', () => {
+      expect(loggingData.getLevels()).toEqual(
+        privateApi.logLevels
+      );
+    });
+
+  });
+
 });

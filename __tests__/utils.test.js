@@ -6,6 +6,8 @@ import * as types from '@babel/types';
 jest.mock('@babel/types');
 // services
 import loggingArguments from './../src/arguments';
+import loggingData from './../src/logging';
+jest.mock('./../src/logging');
 import sourceFile from './../src/source-file';
 jest.mock('./../src/source-file');
 // constants
@@ -472,9 +474,11 @@ describe('utils.js', () => {
     });
   });
 
-  describe('privateApi.getLogLevel', () => {
-    // Note: this function will be updated to support different levels
+  describe('privateApi.getDefaultLogLevelName', () => {
     beforeAll(() => {
+      jest.spyOn(loggingData, 'getLevels').mockReturnValue({
+        log: 'log',
+      });
       jest.spyOn(types, 'isCatchClause').mockReturnValue(false);
     });
     beforeEach(() => {
@@ -513,45 +517,129 @@ describe('utils.js', () => {
       };
     });
     afterEach(() => {
+      loggingData.getLevels.mockClear();
       types.isCatchClause.mockClear();
     });
     afterAll(() => {
+      loggingData.getLevels.mockRestore();
       types.isCatchClause.mockRestore();
     });
 
-    it('determines if the path is from a catch clause by calling `types.isCatchClause`', () => {
-      privateApi.getLogLevel(testSpecificMocks.path, testSpecificMocks.state, testSpecificMocks.knownData);
+    it('determines if the path is from a catch clause', () => {
+      privateApi.getDefaultLogLevelName(testSpecificMocks.path, testSpecificMocks.state, testSpecificMocks.knownData);
 
       expect(types.isCatchClause).toHaveBeenCalledWith(
         testSpecificMocks.path
       );
     });
 
-    it('if the path represents a catch clause => returns method name based on level from `levelForTryCatch`', () => {
+    it('returns level based on value from `levelForTryCatch` if the path represents a catch clause', () => {
       types.isCatchClause.mockReturnValueOnce(true);
 
-      expect(privateApi.getLogLevel(
+      expect(privateApi.getDefaultLogLevelName(
         testSpecificMocks.path,
         testSpecificMocks.state,
         testSpecificMocks.knownData
       )).toEqual(
-        'infoMethod'
+        'info'
       );
     });
 
-    it('if the path represents catch member expression => returns method name on level from `levelForMemberExpressionCatch`', () => {
+    it('returns level based on value from `levelForMemberExpressionCatch` if the path represents catch member expression', () => {
       testSpecificMocks.knownData.name = consts.MEMBER_EXPRESSION_CATCH;
 
-      expect(privateApi.getLogLevel(
+      expect(privateApi.getDefaultLogLevelName(
         testSpecificMocks.path,
         testSpecificMocks.state,
         testSpecificMocks.knownData
       )).toEqual(
-        'debugMethod'
+        'debug'
       );
     });
 
-    it('if the path does not represents a catch clause or catch member expression => returns method name for log level', () => {
+    it('retrieves all possible log levels if the path does not represents a catch clause or catch member expression', () => {
+      privateApi.getDefaultLogLevelName(
+        testSpecificMocks.path,
+        testSpecificMocks.state,
+        testSpecificMocks.knownData
+      );
+
+      expect(loggingData.getLevels).toHaveBeenCalledWith();
+    });
+
+    it('returns level for log if the path does not represents a catch clause or catch member expression', () => {
+      expect(privateApi.getDefaultLogLevelName(
+        testSpecificMocks.path,
+        testSpecificMocks.state,
+        testSpecificMocks.knownData
+      )).toEqual(
+        'log'
+      );
+    });
+  });
+
+  describe('privateApi.getLogLevel', () => {
+    // Note: this function will be updated to support different levels
+    beforeAll(() => {
+      jest.spyOn(privateApi, 'getDefaultLogLevelName').mockReturnValue('log');
+      jest.spyOn(types, 'isCatchClause').mockReturnValue(false);
+    });
+    beforeEach(() => {
+      testSpecificMocks.path = {
+        node: {},
+      };
+      testSpecificMocks.state = {
+        babelPluginLoggerSettings: {
+          loggingData: {
+            levelForMemberExpressionCatch: 'debug',
+            levelForTryCatch: 'info',
+            levels: {
+              debug: {
+                methodName: 'debugMethod',
+              },
+              error: {
+                methodName: 'errorMethod',
+              },
+              info: {
+                methodName: 'infoMethod',
+              },
+              log: {
+                methodName: 'logMethod',
+              },
+              warn: {
+                methodName: 'warnMethod',
+              },
+            },
+          },
+        },
+      };
+      testSpecificMocks.knownData = {
+        column: 11,
+        line: 22,
+        name: 'NOT_CATCH_MEMBER_EXPRESSION',
+        source: 'file-name.js',
+      };
+    });
+    afterEach(() => {
+      privateApi.getDefaultLogLevelName.mockClear();
+      types.isCatchClause.mockClear();
+    });
+    afterAll(() => {
+      privateApi.getDefaultLogLevelName.mockRestore();
+      types.isCatchClause.mockRestore();
+    });
+
+    it('determines default log level', () => {
+      privateApi.getLogLevel(testSpecificMocks.path, testSpecificMocks.state, testSpecificMocks.knownData);
+
+      expect(privateApi.getDefaultLogLevelName).toHaveBeenCalledWith(
+        testSpecificMocks.path,
+        testSpecificMocks.state,
+        testSpecificMocks.knownData,
+      );
+    });
+
+    it('returns method name that should be used for logging based on default log level', () => {
       expect(privateApi.getLogLevel(
         testSpecificMocks.path,
         testSpecificMocks.state,

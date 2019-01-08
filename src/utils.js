@@ -3,6 +3,7 @@ import * as types from '@babel/types';
 
 // services
 import loggingArguments from './arguments';
+import loggingData from './logging';
 import sourceFile from './source-file';
 // constants
 import consts from './constants';
@@ -241,7 +242,39 @@ privateApi.getName = (path) => {
 };
 
 /**
- * Get log level that should be used based on path and state.
+ * Get default log level that should be used.
+ * Uses method from `error` for `try...catch` or `Promise.catch()`, otherwise will uses method from `log`.
+ *
+ * @param {Object} path - node path
+ * @param {Object} state - node state
+ * @param {PluginConfigObj} state.babelPluginLoggerSettings - settings for the plugin
+ * @param {LogResourceObj} knownData - object with pre-determined data
+ * @return {String} logLevelName
+ */
+privateApi.getDefaultLogLevelName = (path, state, knownData) => {
+  const {
+    levelForMemberExpressionCatch,
+    levelForTryCatch,
+  } = state.babelPluginLoggerSettings.loggingData;
+
+  const isCatchClause = types.isCatchClause(path);
+  if (isCatchClause) {
+    return levelForTryCatch;
+  }
+
+  if (knownData.name === consts.MEMBER_EXPRESSION_CATCH) {
+    return levelForMemberExpressionCatch;
+  }
+
+  const levels = loggingData.getLevels();
+
+  return levels.log;
+};
+
+/**
+ * Get log level that should be used.
+ * Takes in consideration default logging and if we have something specific
+ *  for function name matcher or file name matcher.
  *
  * @param {Object} path - node path
  * @param {Object} state - node state
@@ -251,21 +284,13 @@ privateApi.getName = (path) => {
  */
 privateApi.getLogLevel = (path, state, knownData) => {
   const {
-    levelForMemberExpressionCatch,
-    levelForTryCatch,
     levels,
   } = state.babelPluginLoggerSettings.loggingData;
 
-  const isCatchClause = types.isCatchClause(path);
-  if (isCatchClause) {
-    return levels[levelForTryCatch].methodName;
-  }
+  const logLevelName = privateApi.getDefaultLogLevelName(path, state, knownData);
+  // TODO: source matching & method name matching for this level of logging
 
-  if (knownData.name === consts.MEMBER_EXPRESSION_CATCH) {
-    return levels[levelForMemberExpressionCatch].methodName;
-  }
-
-  return levels.log.methodName;
+  return levels[logLevelName].methodName;
 };
 
 /**

@@ -58,7 +58,6 @@ privateApi.getLogLevelData = (logLevel, logLevelData) => {
   // log level method name (property from logger that is a function)
   // if is not provided will use logLevel
   options.methodName = logLevelData.methodName || logLevel;
-  // TODO: source matching & method name matching for this level of logging (next version)
 
   return options;
 };
@@ -124,7 +123,14 @@ service.getOptions = (loggingData) => {
   return options;
 };
 
-
+/**
+ * Get log levels
+ *
+ * @return {Object} logLevels
+ */
+service.getLevels = () => (
+  privateApi.logLevels
+);
 
 // only for testing
 export {
