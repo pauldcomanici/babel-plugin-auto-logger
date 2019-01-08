@@ -7,6 +7,10 @@
  *
  * @typedef {Object} LoggerLevelObj
  * @property {String} methodName - property name for logger object that is a function and will be called for this log level
+ * @property {String} fileMatcher - regular expression for sources that should have current log level
+ * @property {Boolean} fileMatchOverwritePriority - flag to know if there is a match based on file => this log level should overwrite higher priority log level
+ * @property {String} functionNameMatcher - regular expression for function name that should have current log level
+ * @property {Boolean} functionNameMatchOverwritePriority - flag to know if there is a match based on function name => this log level should overwrite higher priority log level
  */
 
 /**

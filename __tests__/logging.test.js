@@ -44,22 +44,34 @@ describe('logging.js', () => {
     beforeEach(() => {
       testSpecificMocks.logLevel = 'warn';
       testSpecificMocks.logLevelData = {
+        fileMatcher: '.*specific-file-name[^/]+js',
+        fileMatchOverwritePriority: true,
+        functionNameMatcher: '.*awesomeName$',
+        functionNameMatchOverwritePriority: true,
         methodName: 'warnMethod',
       };
     });
 
-    it('when `methodName` has truthy value => returns object with the provided method name', () => {
+    it('returns object with the provided properties when they have values', () => {
       expect(privateApi.getLogLevelData(testSpecificMocks.logLevel, testSpecificMocks.logLevelData)).toEqual(
         {
+          fileMatcher: testSpecificMocks.logLevelData.fileMatcher,
+          fileMatchOverwritePriority: testSpecificMocks.logLevelData.fileMatchOverwritePriority,
+          functionNameMatcher: testSpecificMocks.logLevelData.functionNameMatcher,
+          functionNameMatchOverwritePriority: testSpecificMocks.logLevelData.functionNameMatchOverwritePriority,
           methodName: testSpecificMocks.logLevelData.methodName,
         }
       );
     });
 
-    it('when `methodName` has falsy value => returns object with the log level as method name', () => {
-      testSpecificMocks.logLevelData.methodName = false;
+    it('returns object with defaults when provided properties are not defined or they have falsy values', () => {
+      testSpecificMocks.logLevelData = {};
       expect(privateApi.getLogLevelData(testSpecificMocks.logLevel, testSpecificMocks.logLevelData)).toEqual(
         {
+          fileMatcher: '',
+          fileMatchOverwritePriority: false,
+          functionNameMatcher: '',
+          functionNameMatchOverwritePriority: false,
           methodName: testSpecificMocks.logLevel,
         }
       );
@@ -86,13 +98,13 @@ describe('logging.js', () => {
       privateApi.getLogLevelData.mockRestore();
     });
 
-    it('when plugin was provided with settings for every log level => retrieves settings for every supported log level using provided settings by calling `privateApi.getLogLevelData`', () => {
+    it('when plugin was provided with settings for every log level => retrieves settings for every supported log level using provided settings', () => {
       privateApi.getLoggingLevels(testSpecificMocks.loggingLevels);
 
       expect(privateApi.getLogLevelData.mock.calls).toMatchSnapshot();
     });
 
-    it('when plugin was not provided with settings for every log level => retrieves settings for every supported log level using default settings by calling `privateApi.getLogLevelData`', () => {
+    it('when plugin was not provided with settings for every log level => retrieves settings for every supported log level using default settings', () => {
       testSpecificMocks.loggingLevels = {};
       privateApi.getLoggingLevels(testSpecificMocks.loggingLevels);
 

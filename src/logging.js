@@ -58,6 +58,14 @@ privateApi.getLogLevelData = (logLevel, logLevelData) => {
   // log level method name (property from logger that is a function)
   // if is not provided will use logLevel
   options.methodName = logLevelData.methodName || logLevel;
+  // source file matcher
+  options.fileMatcher = logLevelData.fileMatcher || '';
+  // overwrite priority log level if match by file
+  options.fileMatchOverwritePriority = logLevelData.fileMatchOverwritePriority || false;
+  // function name matcher
+  options.functionNameMatcher = logLevelData.functionNameMatcher || '';
+  // overwrite priority log level if match by function name
+  options.functionNameMatchOverwritePriority = logLevelData.functionNameMatchOverwritePriority || false;
 
   return options;
 };
@@ -67,7 +75,7 @@ privateApi.getLogLevelData = (logLevel, logLevelData) => {
  * It will check every log level and prepared settings for it.
  *
  * @param {Object} loggingLevels - logging levels
- * @return {Object} options - object with options got the logging levels
+ * @return {Object} options - object with options for the logging levels
  */
 privateApi.getLoggingLevels = (loggingLevels) => {
   const options = {};
