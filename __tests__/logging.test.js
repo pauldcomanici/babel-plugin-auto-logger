@@ -30,11 +30,11 @@ describe('logging.js', () => {
     it('is an array with strings that represent log levels', () => {
       expect(privateApi.supportedLogLevels).toEqual(
         [
-          privateApi.logLevels.debug,
           privateApi.logLevels.error,
-          privateApi.logLevels.info,
-          privateApi.logLevels.log,
           privateApi.logLevels.warn,
+          privateApi.logLevels.info,
+          privateApi.logLevels.debug,
+          privateApi.logLevels.log,
         ]
       );
     });
@@ -204,6 +204,16 @@ describe('logging.js', () => {
     it('returns an object with log levels', () => {
       expect(loggingData.getLevels()).toEqual(
         privateApi.logLevels
+      );
+    });
+
+  });
+
+  describe('getLevelsByPriority', () => {
+
+    it('returns an array with log levels ordered by priority', () => {
+      expect(loggingData.getLevelsByPriority()).toEqual(
+        privateApi.supportedLogLevels
       );
     });
 

@@ -32,17 +32,17 @@ privateApi.logLevels = {
 };
 
 /**
- * Supported log levels by the plugin
+ * Supported log levels ordered by priority
  *
  * @default
  * @type {Array<String>}
  */
 privateApi.supportedLogLevels = [
-  privateApi.logLevels.debug,
   privateApi.logLevels.error,
-  privateApi.logLevels.info,
-  privateApi.logLevels.log,
   privateApi.logLevels.warn,
+  privateApi.logLevels.info,
+  privateApi.logLevels.debug,
+  privateApi.logLevels.log,
 ];
 
 /**
@@ -130,6 +130,15 @@ service.getOptions = (loggingData) => {
  */
 service.getLevels = () => (
   privateApi.logLevels
+);
+
+/**
+ * Get log levels by priority
+ *
+ * @return {Array} logLevels
+ */
+service.getLevelsByPriority = () => (
+  privateApi.supportedLogLevels
 );
 
 // only for testing
