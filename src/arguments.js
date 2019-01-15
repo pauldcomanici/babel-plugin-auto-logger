@@ -22,27 +22,12 @@ const service = {};
 /**
  * Get default arguments for logging
  *
- * @param {Object} state - node state
  * @param {LogResourceObj} knownData - object with pre-determined data
  * @return {Array<String>} parameter names that represent a string
  */
-privateApi.getDefault = (state, knownData) => {
-  const {
-    parserOpts,
-    root,
-    sourceFileName,
-    sourceMapTarget,
-  } = state.file.opts;
-
-  let sourceFile = sourceMapTarget || sourceFileName ||
-    (parserOpts && (parserOpts.sourceMapTarget || parserOpts.sourceFileName));
-  if (sourceFile && root) {
-    // extract root path from source path
-    sourceFile = sourceFile.replace(root, '');
-  }
-
+privateApi.getDefault = (knownData) => {
   // build first argument, will contain file name, line number and column number
-  const firstArg = `[${sourceFile}:${knownData.line}:${knownData.column}]`;
+  const firstArg = `[${knownData.source}:${knownData.line}:${knownData.column}]`;
 
   return [
     types.stringLiteral(firstArg),
@@ -101,7 +86,7 @@ privateApi.getOtherArguments = (path, knownData) => {
  * @return {Array} args
  */
 service.get = (path, state, knownData) => (
-  privateApi.getDefault(state, knownData)
+  privateApi.getDefault(knownData)
     .concat(
       privateApi.getOtherArguments(path, knownData)
     )

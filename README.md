@@ -11,18 +11,49 @@
       src="https://codecov.io/gh/darkyndy/babel-plugin-auto-logger/branch/master/graph/badge.svg"
     />
   </a>
-  <a href="https://www.npmjs.com/package/babel-plugin-auto-logger">
-    <img
-      alt="npm Downloads"
-      src="https://img.shields.io/npm/dm/babel-plugin-auto-logger.svg?maxAge=57600"
-    />
-  </a>
   <a href="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger?targetFile=package.json">
     <img
       alt="Known Vulnerabilities"
       src="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger/badge.svg?targetFile=package.json"
       data-canonical-src="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger?targetFile=package.json"
       style="max-width:100%;"
+    />
+  </a>
+  <a href="https://david-dm.org/darkyndy/babel-plugin-auto-logger">
+    <img
+      alt="dependencies status"
+      src="https://david-dm.org/darkyndy/babel-plugin-auto-logger/status.svg"
+    />
+  </a>
+  <a href="https://david-dm.org/darkyndy/babel-plugin-auto-logger?type=dev">
+    <img
+      alt="devDependencies status"
+      src="https://david-dm.org/darkyndy/babel-plugin-auto-logger/dev-status.svg"
+    />
+  </a>
+  <a href="https://www.npmjs.com/package/babel-plugin-auto-logger">
+    <img
+      alt="npm Downloads"
+      src="https://img.shields.io/npm/dm/babel-plugin-auto-logger.svg?maxAge=57600"
+    />
+  </a>
+  <a href="https://github.com/darkyndy/babel-plugin-auto-logger/blob/master/LICENSE">
+    <img
+      alt="MIT License"
+      src="https://img.shields.io/npm/l/babel-plugin-auto-logger.svg"
+    />
+  </a>
+  <br/>
+  <a href="https://www.patreon.com/paul_comanici">
+    <img
+      alt="support the author"
+      src="https://img.shields.io/badge/patreon-support%20the%20author-blue.svg"
+    />
+  </a>
+  <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T645WN5RWR6WS&source=url">
+    <img
+      alt="donate"
+      src="https://img.shields.io/badge/paypal-donate-blue.svg"
     />
   </a>
 </p>
@@ -84,18 +115,24 @@ Abstract example with all plugin options:
     "levelForMemberExpressionCatch": "error",
     "levels": {
       "debug": {
+        "matchFunctionName": "^(get|set)$",
+        "matchSource": "utils.js$",
         "methodName": "myDebug"
       },
       "error": {
         "methodName": "myError"
       },
       "info": {
+        "matchFunctionName": "adapt",
+        "matchSource": "api.js$",
         "methodName": "myInfo"
       },
       "log": {
         "methodName": "myLog"
       },
       "warn": {
+        "matchFunctionName": "matcher-for-function-name",
+        "matchSource": "matcher-for-source",
         "methodName": "myWarn"
       }
     },
@@ -125,18 +162,24 @@ Abstract example with all plugin options:
   ```text
   {
     debug: {
+      matchFunctionName: '',
+      matchSource: '',
       methodName: 'debug',
     },
     error: {
       methodName: 'error',
     },
     info: {
+      matchFunctionName: '',
+      matchSource: '',
       methodName: 'info',
     },
     log: {
       methodName: 'log',
     },
     warn: {
+      matchFunctionName: '',
+      matchSource: '',
       methodName: 'warn',
     },
   }
@@ -156,7 +199,8 @@ Abstract example with all plugin options:
 - Data type: Object
 - Default value: specific for every log level
 - Details:
-  - allows you to use your own method name for logging API 
+  - allows to use your own method name for logging API
+  - ability to control when this log level will be used (only for warn, info & debug) based on regular expression that tests source or function name
 
 #### loggingData.name
 - Data type: String
@@ -238,7 +282,3 @@ If you want to control the API (service) that should be used, you will use `name
 >    return a + b;
 >  }
 >  ```
-
-## Coming soon
-- Ability to use specific logging method depending on the function name
-- Ability to use specific logging method depending on the file path

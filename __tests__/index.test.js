@@ -4,11 +4,10 @@ import {babelPluginAutoLogger} from './../src/index';
 // dependencies
 // services
 import setup from './../src/setup';
-import visitors from './../src/visitors';
-
-// mocks
 jest.mock('./../src/setup');
+import visitors from './../src/visitors';
 jest.mock('./../src/visitors');
+
 
 describe('index.js', () => {
   const mocks = {};

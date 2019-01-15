@@ -3,6 +3,8 @@ import * as types from '@babel/types';
 
 // services
 import loggingArguments from './arguments';
+import loggingData from './logging';
+import sourceFile from './source-file';
 // constants
 import consts from './constants';
 
@@ -240,7 +242,105 @@ privateApi.getName = (path) => {
 };
 
 /**
- * Get log level that should be used based on path and state.
+ * Test value based on matcher
+ *
+ * @param {String|RegExp} matcher - regular expression or empty string
+ * @param {String} value - source for the code or function name
+ * @returns {Boolean} matched
+ */
+privateApi.testMatcher = (matcher, value) => {
+  if (matcher) {
+    // if we have matcher
+    return matcher.test(value);
+  }
+
+  return false;
+};
+
+/**
+ * Test matcher for every log level. Returned function is the callback for find method.
+ *
+ * @param {LoggerLevelsObj} levels - levels data from settings
+ * @param {Array} levelsByPriority - log level names ordered by priority
+ * @param {LogResourceObj} knownData - object with pre-determined data
+ * @return {Function} testLogLevelMatcherFn
+ */
+privateApi.testLogLevelMatcher = (levels, levelsByPriority, knownData) => (logLevel) => {
+  if (logLevel === levelsByPriority[0] || logLevel === levelsByPriority[4]) {
+    // ignore error or log levels
+    return false;
+  }
+
+  const logLevelSettings = levels[logLevel];
+  const matchOnSource = privateApi.testMatcher(logLevelSettings.matchSourceRegExp, knownData.source);
+  if (matchOnSource) {
+    return matchOnSource;
+  }
+
+  return privateApi.testMatcher(logLevelSettings.matchFunctionNameRegExp, knownData.name);
+};
+
+/**
+ * Get default log level that should be used.
+ * Uses method from `error` for `try...catch` or `Promise.catch()`, otherwise will uses method from `log`.
+ *
+ * @param {Object} path - node path
+ * @param {Object} state - node state
+ * @param {PluginConfigObj} state.babelPluginLoggerSettings - settings for the plugin
+ * @param {LogResourceObj} knownData - object with pre-determined data
+ * @return {String} logLevelName
+ */
+privateApi.getDefaultLogLevelName = (path, state, knownData) => {
+  const {
+    levelForMemberExpressionCatch,
+    levelForTryCatch,
+  } = state.babelPluginLoggerSettings.loggingData;
+
+  const isCatchClause = types.isCatchClause(path);
+  if (isCatchClause) {
+    return levelForTryCatch;
+  }
+
+  if (knownData.name === consts.MEMBER_EXPRESSION_CATCH) {
+    return levelForMemberExpressionCatch;
+  }
+
+  const levels = loggingData.getLevels();
+
+  return levels.log;
+};
+
+/**
+ * Get method that should be used for logging.
+ *
+ * @param {Object} path - node path
+ * @param {Object} state - node state
+ * @param {PluginConfigObj} state.babelPluginLoggerSettings - settings for the plugin
+ * @param {LogResourceObj} knownData - object with pre-determined data
+ * @param {String} defaultLogLevelName - default log level that can be used
+ * @return {String} loggingMethodName
+ */
+privateApi.getLoggingMethod = (path, state, knownData, defaultLogLevelName) => {
+  const {
+    levels,
+  } = state.babelPluginLoggerSettings.loggingData;
+  const levelsByPriority = loggingData.getLevelsByPriority();
+  let newLoglevelName = '';
+
+  if (defaultLogLevelName !== levelsByPriority[0]) {
+    // if the log level name is not for top priority logging (error)
+    // check source and function name match for other low priority log levels
+    newLoglevelName = levelsByPriority.find(privateApi.testLogLevelMatcher(levels, levelsByPriority, knownData));
+  }
+  const logLevelName = newLoglevelName || defaultLogLevelName;
+
+  return levels[logLevelName].methodName;
+};
+
+/**
+ * Get log level that should be used.
+ * Takes in consideration default logging and if we have something specific
+ *  for function name matcher or file name matcher.
  *
  * @param {Object} path - node path
  * @param {Object} state - node state
@@ -249,22 +349,45 @@ privateApi.getName = (path) => {
  * @return {String} logLevel
  */
 privateApi.getLogLevel = (path, state, knownData) => {
-  const {
-    levelForMemberExpressionCatch,
-    levelForTryCatch,
-    levels,
-  } = state.babelPluginLoggerSettings.loggingData;
+  const logLevelName = privateApi.getDefaultLogLevelName(path, state, knownData);
 
-  const isCatchClause = types.isCatchClause(path);
-  if (isCatchClause) {
-    return levels[levelForTryCatch].methodName;
-  }
+  return privateApi.getLoggingMethod(path, state, knownData, logLevelName);
+};
 
-  if (knownData.name === consts.MEMBER_EXPRESSION_CATCH) {
-    return levels[levelForMemberExpressionCatch].methodName;
-  }
+/**
+ * Insert logging.
+ *
+ * @param {Object} path - node path
+ * @param {Object} insertPath - node path where we will add logging
+ * @param {Object} state - node state
+ * @param {LogResourceObj} partialData - object with pre-determined data
+ * @return {undefined}
+ */
+privateApi.insertLogging = (path, insertPath, state, partialData) => {
+  const source = sourceFile.get(state);
+  const knownData = {
+    column: partialData.column,
+    line: partialData.line,
+    name: partialData.name,
+    source,
+  };
 
-  return levels.log.methodName;
+  insertPath.unshiftContainer(
+    'body',
+    types.expressionStatement(
+      types.callExpression(
+        types.memberExpression(
+          types.identifier(service.getLoggerName(state)),
+          types.identifier(privateApi.getLogLevel(path, state, knownData))
+        ),
+        loggingArguments.get(
+          path,
+          state,
+          knownData
+        )
+      )
+    )
+  );
 };
 
 /**
@@ -364,27 +487,15 @@ service.addLogger = (path, state) => {
   const loggerCanBeAdded = privateApi.canBeAdded(insertPath, state);
 
   if (loggerCanBeAdded) {
-    const knownData = {
-      column,
-      line,
-      name,
-    };
-
-    insertPath.unshiftContainer(
-      'body',
-      types.expressionStatement(
-        types.callExpression(
-          types.memberExpression(
-            types.identifier(service.getLoggerName(state)),
-            types.identifier(privateApi.getLogLevel(path, state, knownData))
-          ),
-          loggingArguments.get(
-            path,
-            state,
-            knownData
-          )
-        )
-      )
+    privateApi.insertLogging(
+      path,
+      insertPath,
+      state,
+      {
+        column,
+        line,
+        name,
+      }
     );
 
     return true;

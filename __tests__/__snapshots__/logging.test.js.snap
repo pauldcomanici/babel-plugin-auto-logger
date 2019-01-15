@@ -80,43 +80,47 @@ Object {
 }
 `;
 
-exports[`logging.js privateApi.getLoggingLevels when plugin was not provided with settings for every log level => retrieves settings for every supported log level using default settings by calling \`privateApi.getLogLevelData\` 1`] = `
+exports[`logging.js privateApi.getLoggingLevels when plugin was not provided with settings for every log level => retrieves settings for every supported log level using default settings 1`] = `
 Array [
   Array [
-    "debug",
-    Object {},
-  ],
-  Array [
     "error",
-    Object {},
-  ],
-  Array [
-    "info",
-    Object {},
-  ],
-  Array [
-    "log",
     Object {},
   ],
   Array [
     "warn",
     Object {},
   ],
-]
-`;
-
-exports[`logging.js privateApi.getLoggingLevels when plugin was provided with settings for every log level => retrieves settings for every supported log level using provided settings by calling \`privateApi.getLogLevelData\` 1`] = `
-Array [
+  Array [
+    "info",
+    Object {},
+  ],
   Array [
     "debug",
     Object {},
   ],
   Array [
+    "log",
+    Object {},
+  ],
+]
+`;
+
+exports[`logging.js privateApi.getLoggingLevels when plugin was provided with settings for every log level => retrieves settings for every supported log level using provided settings 1`] = `
+Array [
+  Array [
     "error",
     Object {},
   ],
   Array [
+    "warn",
+    Object {},
+  ],
+  Array [
     "info",
+    Object {},
+  ],
+  Array [
+    "debug",
     Object {},
   ],
   Array [
@@ -124,10 +128,6 @@ Array [
     Object {
       "methodName": "myLog",
     },
-  ],
-  Array [
-    "warn",
-    Object {},
   ],
 ]
 `;

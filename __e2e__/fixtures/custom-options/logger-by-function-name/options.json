@@ -1,0 +1,37 @@
+{
+  "plugins": [
+    [
+      "./../../../../lib/",
+      {
+        "loggingData": {
+          "levelForTryCatch": "error",
+          "levelForMemberExpressionCatch": "error",
+          "levels": {
+            "debug": {
+              "matchFunctionName": "sum",
+              "methodName": "myDebug"
+            },
+            "error": {
+              "matchFunctionName": "it-is-ignored-for-error-level",
+              "methodName": "myError"
+            },
+            "info": {
+              "matchFunctionName": "sub",
+              "methodName": "myInfo"
+            },
+            "log": {
+              "matchFunctionName": "it-is-ignored-for-log-level",
+              "methodName": "myLog"
+            },
+            "warn": {
+              "matchFunctionName": "multiply",
+              "methodName": "myWarn"
+            }
+          },
+          "name": "myLogger",
+          "source": "path/to/file"
+        }
+      }
+    ]
+  ]
+}

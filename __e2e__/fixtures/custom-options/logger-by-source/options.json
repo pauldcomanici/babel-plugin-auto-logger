@@ -1,0 +1,34 @@
+{
+  "plugins": [
+    [
+      "./../../../../lib/",
+      {
+        "loggingData": {
+          "levelForTryCatch": "error",
+          "levelForMemberExpressionCatch": "error",
+          "levels": {
+            "debug": {
+              "matchSource": "/input.js",
+              "methodName": "myDebug"
+            },
+            "error": {
+              "methodName": "myError"
+            },
+            "info": {
+              "matchSource": "input.jsx",
+              "methodName": "myInfo"
+            },
+            "log": {
+              "methodName": "myLog"
+            },
+            "warn": {
+              "methodName": "myWarn"
+            }
+          },
+          "name": "myLogger",
+          "source": "path/to/file"
+        }
+      }
+    ]
+  ]
+}

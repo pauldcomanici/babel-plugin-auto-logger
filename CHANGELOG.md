@@ -10,6 +10,15 @@
 > - :nail_care:  [Polish]
 
 
+## v1.0.0
+:rocket: ability to use specific logging by source (file name/path) matching
+:rocket: ability to use specific logging by function name matching
+:house: add badge for dependencies
+:house: add badge for paypal donate
+:house: add badge for patreon support
+:house: update project dependencies
+:memo: document how version can be updated
+
 ## v0.6.0
 * :lollipop: When the source file name cannot be determined based on sourceMapTarget or sourceFileName try to check parserOpts object (#2)
 * :house: Update dependencies

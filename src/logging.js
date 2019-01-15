@@ -32,25 +32,36 @@ privateApi.logLevels = {
 };
 
 /**
- * Supported log levels by the plugin
+ * Supported log levels ordered by priority
  *
  * @default
  * @type {Array<String>}
  */
 privateApi.supportedLogLevels = [
-  privateApi.logLevels.debug,
   privateApi.logLevels.error,
-  privateApi.logLevels.info,
-  privateApi.logLevels.log,
   privateApi.logLevels.warn,
+  privateApi.logLevels.info,
+  privateApi.logLevels.debug,
+  privateApi.logLevels.log,
 ];
+
+/**
+ * Get matcher.
+ * If it has truthy value as string returns RegExp based on it, if not return empty object.
+ *
+ * @param {String} [matcher] - value for the matcher
+ * @returns {RegExp|String} updatedMatcher
+ */
+privateApi.getMatcher = (matcher) => (
+  (matcher && typeof matcher === 'string' && new RegExp(matcher)) || ''
+);
 
 /**
  * Prepare logging level settings.
  *
  * @param {String} logLevel - log level
  * @param {LoggerLevelObj} logLevelData - logging level options
- * @return {Object} options - object with options for the provided log level
+ * @return {LoggerLevelObj} options - object with options for the provided log level
  */
 privateApi.getLogLevelData = (logLevel, logLevelData) => {
   const options = {};
@@ -58,7 +69,14 @@ privateApi.getLogLevelData = (logLevel, logLevelData) => {
   // log level method name (property from logger that is a function)
   // if is not provided will use logLevel
   options.methodName = logLevelData.methodName || logLevel;
-  // TODO: source matching & method name matching for this level of logging (next version)
+  // source file matcher
+  options.matchSource = logLevelData.matchSource || '';
+  // source file matcher as RegExp
+  options.matchSourceRegExp = privateApi.getMatcher(options.matchSource);
+  // function name matcher
+  options.matchFunctionName = logLevelData.matchFunctionName || '';
+  // function name matcher as RegExp
+  options.matchFunctionNameRegExp = privateApi.getMatcher(options.matchFunctionName);
 
   return options;
 };
@@ -68,7 +86,7 @@ privateApi.getLogLevelData = (logLevel, logLevelData) => {
  * It will check every log level and prepared settings for it.
  *
  * @param {Object} loggingLevels - logging levels
- * @return {Object} options - object with options got the logging levels
+ * @return {Object} options - object with options for the logging levels
  */
 privateApi.getLoggingLevels = (loggingLevels) => {
   const options = {};
@@ -124,7 +142,23 @@ service.getOptions = (loggingData) => {
   return options;
 };
 
+/**
+ * Get log levels
+ *
+ * @return {Object} logLevels
+ */
+service.getLevels = () => (
+  privateApi.logLevels
+);
 
+/**
+ * Get log levels by priority
+ *
+ * @return {Array} logLevels
+ */
+service.getLevelsByPriority = () => (
+  privateApi.supportedLogLevels
+);
 
 // only for testing
 export {

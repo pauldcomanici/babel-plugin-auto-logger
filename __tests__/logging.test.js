@@ -30,36 +30,114 @@ describe('logging.js', () => {
     it('is an array with strings that represent log levels', () => {
       expect(privateApi.supportedLogLevels).toEqual(
         [
-          privateApi.logLevels.debug,
           privateApi.logLevels.error,
-          privateApi.logLevels.info,
-          privateApi.logLevels.log,
           privateApi.logLevels.warn,
+          privateApi.logLevels.info,
+          privateApi.logLevels.debug,
+          privateApi.logLevels.log,
         ]
       );
     });
   });
 
+  describe('privateApi.getMatcher', () => {
+    beforeEach(() => {
+      testSpecificMocks.matcher = '.*input.js$';
+    });
+
+    it('returns regular expression when matcher is a string with truthy value', () => {
+      expect(privateApi.getMatcher(testSpecificMocks.matcher)).toEqual(
+        /.*input.js$/
+      );
+    });
+
+    it('returns empty string when matcher has falsy value', () => {
+      testSpecificMocks.matcher =  null;
+
+      expect(privateApi.getMatcher(testSpecificMocks.matcher)).toBe(
+        ''
+      );
+    });
+
+    it('returns empty string when matcher has truthy value as array', () => {
+      testSpecificMocks.matcher = [1, 2];
+
+      expect(privateApi.getMatcher(testSpecificMocks.matcher)).toBe(
+        ''
+      );
+    });
+
+    it('returns empty string when matcher has truthy value as object', () => {
+      testSpecificMocks.matcher = {prop: 'val'};
+
+      expect(privateApi.getMatcher(testSpecificMocks.matcher)).toBe(
+        ''
+      );
+    });
+
+    it('returns empty string when matcher has truthy value as boolean', () => {
+      testSpecificMocks.matcher = true;
+
+      expect(privateApi.getMatcher(testSpecificMocks.matcher)).toBe(
+        ''
+      );
+    });
+  });
+
   describe('privateApi.getLogLevelData', () => {
+    beforeAll(() => {
+      jest.spyOn(privateApi, 'getMatcher');
+    });
     beforeEach(() => {
       testSpecificMocks.logLevel = 'warn';
       testSpecificMocks.logLevelData = {
+        matchSource: '.*specific-file-name[^/]+js',
+        matchFunctionName: '.*awesomeName$',
         methodName: 'warnMethod',
       };
     });
+    afterEach(() => {
+      privateApi.getMatcher.mockClear();
+    });
+    afterAll(() => {
+      privateApi.getMatcher.mockRestore();
+    });
 
-    it('when `methodName` has truthy value => returns object with the provided method name', () => {
+    it('retrieves matcher RegExp for source and function name', () => {
+      privateApi.getLogLevelData(testSpecificMocks.logLevel, testSpecificMocks.logLevelData);
+
+      expect(privateApi.getMatcher.mock.calls).toEqual(
+        [
+          [
+            testSpecificMocks.logLevelData.matchSource,
+          ],
+          [
+            testSpecificMocks.logLevelData.matchFunctionName,
+          ],
+        ]
+      );
+    });
+
+    it('returns object with the provided properties when they have values', () => {
       expect(privateApi.getLogLevelData(testSpecificMocks.logLevel, testSpecificMocks.logLevelData)).toEqual(
         {
+          matchFunctionName: testSpecificMocks.logLevelData.matchFunctionName,
+          matchFunctionNameRegExp: /.*awesomeName$/,
+          matchSource: testSpecificMocks.logLevelData.matchSource,
+          matchSourceRegExp: /.*specific-file-name[^\/]+js/, // eslint-disable-line no-useless-escape
           methodName: testSpecificMocks.logLevelData.methodName,
         }
       );
     });
 
-    it('when `methodName` has falsy value => returns object with the log level as method name', () => {
-      testSpecificMocks.logLevelData.methodName = false;
+    it('returns object with defaults when provided properties are not defined or they have falsy values', () => {
+      testSpecificMocks.logLevelData = {};
       expect(privateApi.getLogLevelData(testSpecificMocks.logLevel, testSpecificMocks.logLevelData)).toEqual(
         {
+          matchFunctionName: '',
+          matchFunctionNameRegExp: '',
+          matchSource: '',
+          matchSourceRegExp: '',
           methodName: testSpecificMocks.logLevel,
         }
       );
@@ -86,13 +164,13 @@ describe('logging.js', () => {
       privateApi.getLogLevelData.mockRestore();
     });
 
-    it('when plugin was provided with settings for every log level => retrieves settings for every supported log level using provided settings by calling `privateApi.getLogLevelData`', () => {
+    it('when plugin was provided with settings for every log level => retrieves settings for every supported log level using provided settings', () => {
       privateApi.getLoggingLevels(testSpecificMocks.loggingLevels);
 
       expect(privateApi.getLogLevelData.mock.calls).toMatchSnapshot();
     });
 
-    it('when plugin was not provided with settings for every log level => retrieves settings for every supported log level using default settings by calling `privateApi.getLogLevelData`', () => {
+    it('when plugin was not provided with settings for every log level => retrieves settings for every supported log level using default settings', () => {
       testSpecificMocks.loggingLevels = {};
       privateApi.getLoggingLevels(testSpecificMocks.loggingLevels);
 
@@ -197,6 +275,26 @@ describe('logging.js', () => {
 
       expect(loggingData.getOptions(testSpecificMocks.loggingData)).toMatchSnapshot();
     });
+  });
+
+  describe('getLevels', () => {
+
+    it('returns an object with log levels', () => {
+      expect(loggingData.getLevels()).toEqual(
+        privateApi.logLevels
+      );
+    });
+
+  });
+
+  describe('getLevelsByPriority', () => {
+
+    it('returns an array with log levels ordered by priority', () => {
+      expect(loggingData.getLevelsByPriority()).toEqual(
+        privateApi.supportedLogLevels
+      );
+    });
+
   });
 
 });

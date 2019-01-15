@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`utils.js privateApi.getLoggingMethod tests every log level if there is a match on source or function name (callback) 1`] = `
+Array [
+  Array [
+    "error",
+    0,
+    Array [
+      "error",
+      "warn",
+      "info",
+      "debug",
+      "log",
+    ],
+  ],
+  Array [
+    "warn",
+    1,
+    Array [
+      "error",
+      "warn",
+      "info",
+      "debug",
+      "log",
+    ],
+  ],
+  Array [
+    "info",
+    2,
+    Array [
+      "error",
+      "warn",
+      "info",
+      "debug",
+      "log",
+    ],
+  ],
+  Array [
+    "debug",
+    3,
+    Array [
+      "error",
+      "warn",
+      "info",
+      "debug",
+      "log",
+    ],
+  ],
+  Array [
+    "log",
+    4,
+    Array [
+      "error",
+      "warn",
+      "info",
+      "debug",
+      "log",
+    ],
+  ],
+]
+`;

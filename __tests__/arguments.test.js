@@ -3,11 +3,10 @@ import loggingArguments, {privateApi} from './../src/arguments';
 
 // dependencies
 import * as types from '@babel/types';
+jest.mock('@babel/types');
 // constants
 import consts from './../src/constants';
 
-// mocks
-jest.mock('@babel/types');
 
 describe('arguments.js', () => {
   let testSpecificMocks;
@@ -26,22 +25,11 @@ describe('arguments.js', () => {
         .mockReturnValueOnce('name')
         .mockReturnValue('stringLiteral');
 
-      testSpecificMocks.state = {
-        file: {
-          opts: {
-            parserOpts: {
-              sourceFileName: '/parsed/path/to/file/file-name.js',
-              sourceMapTarget: 'parsed-file-name.js',
-            },
-            sourceFileName: '/path/to/file/file-name.js',
-            sourceMapTarget: 'file-name.js',
-          },
-        },
-      };
       testSpecificMocks.knownData = {
         column: 11,
         line: 22,
         name: 'functionName',
+        source: 'file-name.js',
       };
     });
     afterEach(() => {
@@ -51,70 +39,8 @@ describe('arguments.js', () => {
       types.stringLiteral.mockRestore();
     });
 
-    it('when `sourceMapTarget` has falsy value will use `sourceFileName` for file name', () => {
-      testSpecificMocks.state.file.opts.sourceMapTarget = undefined;
-      privateApi.getDefault(testSpecificMocks.state, testSpecificMocks.knownData);
-
-      expect(types.stringLiteral.mock.calls[0]).toEqual(
-        [
-          '[/path/to/file/file-name.js:22:11]',
-        ]
-      );
-    });
-
-    it('when `sourceMapTarget` and `sourceFileName` has falsy value will use `parserOpts.sourceMapTarget` for file name', () => {
-      testSpecificMocks.state.file.opts.sourceFileName = undefined;
-      testSpecificMocks.state.file.opts.sourceMapTarget = undefined;
-      privateApi.getDefault(testSpecificMocks.state, testSpecificMocks.knownData);
-
-      expect(types.stringLiteral.mock.calls[0]).toEqual(
-        [
-          '[parsed-file-name.js:22:11]',
-        ]
-      );
-    });
-
-    it('when `sourceMapTarget`, `sourceFileName` and `parserOpts.sourceMapTarget` has falsy value will use `parserOpts.sourceFileName` for file name', () => {
-      testSpecificMocks.state.file.opts.sourceFileName = undefined;
-      testSpecificMocks.state.file.opts.sourceMapTarget = undefined;
-      testSpecificMocks.state.file.opts.parserOpts.sourceMapTarget = undefined;
-      privateApi.getDefault(testSpecificMocks.state, testSpecificMocks.knownData);
-
-      expect(types.stringLiteral.mock.calls[0]).toEqual(
-        [
-          '[/parsed/path/to/file/file-name.js:22:11]',
-        ]
-      );
-    });
-
-    it('does not update source file name by removing root part when it has falsy value', () => {
-      testSpecificMocks.state.file.opts.sourceFileName = undefined;
-      testSpecificMocks.state.file.opts.sourceMapTarget = undefined;
-      testSpecificMocks.state.file.opts.parserOpts = undefined;
-      testSpecificMocks.state.file.opts.root = '/path/to/file';
-      privateApi.getDefault(testSpecificMocks.state, testSpecificMocks.knownData);
-
-      expect(types.stringLiteral.mock.calls[0]).toEqual(
-        [
-          '[undefined:22:11]',
-        ]
-      );
-    });
-
-    it('prepares source file path by extracting root path from it when root and source file name has truthy value', () => {
-      testSpecificMocks.state.file.opts.sourceMapTarget = undefined;
-      testSpecificMocks.state.file.opts.root = '/path/to/file';
-      privateApi.getDefault(testSpecificMocks.state, testSpecificMocks.knownData);
-
-      expect(types.stringLiteral.mock.calls[0]).toEqual(
-        [
-          '[/file-name.js:22:11]',
-        ]
-      );
-    });
-
-    it('prepares string literals that will be used as arguments for the logger method by`calling `types.stringLiteral` (for the first logger argument -> file name with line and column; and a second time for the second argument -> method name)', () => {
-      privateApi.getDefault(testSpecificMocks.state, testSpecificMocks.knownData);
+    it('prepares string literals that will be used as arguments for the logger method, the first logger argument -> file name with line and column; and second time for the second argument -> method name', () => {
+      privateApi.getDefault(testSpecificMocks.knownData);
 
       expect(types.stringLiteral.mock.calls).toEqual(
         [
@@ -130,7 +56,6 @@ describe('arguments.js', () => {
 
     it('returns an array with 2 items ([file:line:column], functionName)', () => {
       expect(privateApi.getDefault(
-        testSpecificMocks.state,
         testSpecificMocks.knownData
       )).toEqual(
         [
@@ -331,6 +256,7 @@ describe('arguments.js', () => {
         column: 11,
         line: 22,
         name: 'functionName',
+        source: 'path/to/file.js',
       };
 
     });
@@ -343,11 +269,10 @@ describe('arguments.js', () => {
       privateApi.getOtherArguments.mockRestore();
     });
 
-    it('prepares default arguments for logger member expression by calling `privateApi.getDefault`', () => {
+    it('prepares default arguments for logger member expression (source file data and method name)', () => {
       loggingArguments.get(testSpecificMocks.path, testSpecificMocks.state, testSpecificMocks.knownData);
 
       expect(privateApi.getDefault).toHaveBeenCalledWith(
-        testSpecificMocks.state,
         testSpecificMocks.knownData
       );
     });

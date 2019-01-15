@@ -6,6 +6,10 @@
  * Plugin settings for log level
  *
  * @typedef {Object} LoggerLevelObj
+ * @property {String} matchSource - regular expression as string for sources that should have current log level
+ * @property {String|RegExp} matchSourceRegExp - regular expression based on `matchSource` or empty string if `matchSource` has falsy value
+ * @property {String} matchFunctionName - regular expression as string for function name that should have current log level
+ * @property {String|RegExp} matchFunctionNameRegExp - regular expression based on `matchFunctionName` or empty string if `matchFunctionName` has falsy value
  * @property {String} methodName - property name for logger object that is a function and will be called for this log level
  */
 
@@ -44,7 +48,8 @@
  * Plugin known data that is sent as parameter
  *
  * @typedef {Object} LogResourceObj
- * @property {String} column - column number where the source code is located
- * @property {String} line - line number where the source code is located
+ * @property {Number} column - column number where the source code is located
+ * @property {Number} line - line number where the source code is located
  * @property {String} name - name (usually the function name)
+ * @property {String} source - file name, may including path
  */
