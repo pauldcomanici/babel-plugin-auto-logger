@@ -46,11 +46,22 @@ privateApi.supportedLogLevels = [
 ];
 
 /**
+ * Get matcher.
+ * If it has truthy value as string returns RegExp based on it, if not return empty object.
+ *
+ * @param {String} [matcher] - value for the matcher
+ * @returns {RegExp|String} updatedMatcher
+ */
+privateApi.getMatcher = (matcher) => (
+  (matcher && typeof matcher === 'string' && new RegExp(matcher)) || ''
+);
+
+/**
  * Prepare logging level settings.
  *
  * @param {String} logLevel - log level
  * @param {LoggerLevelObj} logLevelData - logging level options
- * @return {Object} options - object with options for the provided log level
+ * @return {LoggerLevelObj} options - object with options for the provided log level
  */
 privateApi.getLogLevelData = (logLevel, logLevelData) => {
   const options = {};
@@ -59,13 +70,13 @@ privateApi.getLogLevelData = (logLevel, logLevelData) => {
   // if is not provided will use logLevel
   options.methodName = logLevelData.methodName || logLevel;
   // source file matcher
-  options.fileMatcher = logLevelData.fileMatcher || '';
-  // overwrite priority log level if match by file
-  options.fileMatchOverwritePriority = logLevelData.fileMatchOverwritePriority || false;
+  options.matchSource = logLevelData.matchSource || '';
+  // source file matcher as RegExp
+  options.matchSourceRegExp = privateApi.getMatcher(options.matchSource);
   // function name matcher
-  options.functionNameMatcher = logLevelData.functionNameMatcher || '';
-  // overwrite priority log level if match by function name
-  options.functionNameMatchOverwritePriority = logLevelData.functionNameMatchOverwritePriority || false;
+  options.matchFunctionName = logLevelData.matchFunctionName || '';
+  // function name matcher as RegExp
+  options.matchFunctionNameRegExp = privateApi.getMatcher(options.matchFunctionName);
 
   return options;
 };

@@ -242,6 +242,45 @@ privateApi.getName = (path) => {
 };
 
 /**
+ * Test value based on matcher
+ *
+ * @param {String|RegExp} matcher - regular expression or empty string
+ * @param {String} value - source for the code or function name
+ * @returns {Boolean} matched
+ */
+privateApi.testMatcher = (matcher, value) => {
+  if (matcher) {
+    // if we have matcher
+    return matcher.test(value);
+  }
+
+  return false;
+};
+
+/**
+ * Test matcher for every log level. Returned function is the callback for find method.
+ *
+ * @param {LoggerLevelsObj} levels - levels data from settings
+ * @param {Array} levelsByPriority - log level names ordered by priority
+ * @param {LogResourceObj} knownData - object with pre-determined data
+ * @return {Function} testLogLevelMatcherFn
+ */
+privateApi.testLogLevelMatcher = (levels, levelsByPriority, knownData) => (logLevel) => {
+  if (logLevel === levelsByPriority[0] || logLevel === levelsByPriority[4]) {
+    // ignore error or log levels
+    return false;
+  }
+
+  const logLevelSettings = levels[logLevel];
+  const matchOnSource = privateApi.testMatcher(logLevelSettings.matchSourceRegExp, knownData.source);
+  if (matchOnSource) {
+    return matchOnSource;
+  }
+
+  return privateApi.testMatcher(logLevelSettings.matchFunctionNameRegExp, knownData.name);
+};
+
+/**
  * Get default log level that should be used.
  * Uses method from `error` for `try...catch` or `Promise.catch()`, otherwise will uses method from `log`.
  *
@@ -272,6 +311,33 @@ privateApi.getDefaultLogLevelName = (path, state, knownData) => {
 };
 
 /**
+ * Get method that should be used for logging.
+ *
+ * @param {Object} path - node path
+ * @param {Object} state - node state
+ * @param {PluginConfigObj} state.babelPluginLoggerSettings - settings for the plugin
+ * @param {LogResourceObj} knownData - object with pre-determined data
+ * @param {String} defaultLogLevelName - default log level that can be used
+ * @return {String} loggingMethodName
+ */
+privateApi.getLoggingMethod = (path, state, knownData, defaultLogLevelName) => {
+  const {
+    levels,
+  } = state.babelPluginLoggerSettings.loggingData;
+  const levelsByPriority = loggingData.getLevelsByPriority();
+  let newLoglevelName = '';
+
+  if (defaultLogLevelName !== levelsByPriority[0]) {
+    // if the log level name is not for top priority logging (error)
+    // check source and function name match for other low priority log levels
+    newLoglevelName = levelsByPriority.find(privateApi.testLogLevelMatcher(levels, levelsByPriority, knownData));
+  }
+  const logLevelName = newLoglevelName || defaultLogLevelName;
+
+  return levels[logLevelName].methodName;
+};
+
+/**
  * Get log level that should be used.
  * Takes in consideration default logging and if we have something specific
  *  for function name matcher or file name matcher.
@@ -283,14 +349,9 @@ privateApi.getDefaultLogLevelName = (path, state, knownData) => {
  * @return {String} logLevel
  */
 privateApi.getLogLevel = (path, state, knownData) => {
-  const {
-    levels,
-  } = state.babelPluginLoggerSettings.loggingData;
-
   const logLevelName = privateApi.getDefaultLogLevelName(path, state, knownData);
-  // TODO: source matching & method name matching for this level of logging
 
-  return levels[logLevelName].methodName;
+  return privateApi.getLoggingMethod(path, state, knownData, logLevelName);
 };
 
 /**

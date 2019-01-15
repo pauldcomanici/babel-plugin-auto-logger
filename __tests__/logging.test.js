@@ -40,25 +40,91 @@ describe('logging.js', () => {
     });
   });
 
+  describe('privateApi.getMatcher', () => {
+    beforeEach(() => {
+      testSpecificMocks.matcher = '.*input.js$';
+    });
+
+    it('returns regular expression when matcher is a string with truthy value', () => {
+      expect(privateApi.getMatcher(testSpecificMocks.matcher)).toEqual(
+        /.*input.js$/
+      );
+    });
+
+    it('returns empty string when matcher has falsy value', () => {
+      testSpecificMocks.matcher =  null;
+
+      expect(privateApi.getMatcher(testSpecificMocks.matcher)).toBe(
+        ''
+      );
+    });
+
+    it('returns empty string when matcher has truthy value as array', () => {
+      testSpecificMocks.matcher = [1, 2];
+
+      expect(privateApi.getMatcher(testSpecificMocks.matcher)).toBe(
+        ''
+      );
+    });
+
+    it('returns empty string when matcher has truthy value as object', () => {
+      testSpecificMocks.matcher = {prop: 'val'};
+
+      expect(privateApi.getMatcher(testSpecificMocks.matcher)).toBe(
+        ''
+      );
+    });
+
+    it('returns empty string when matcher has truthy value as boolean', () => {
+      testSpecificMocks.matcher = true;
+
+      expect(privateApi.getMatcher(testSpecificMocks.matcher)).toBe(
+        ''
+      );
+    });
+  });
+
   describe('privateApi.getLogLevelData', () => {
+    beforeAll(() => {
+      jest.spyOn(privateApi, 'getMatcher');
+    });
     beforeEach(() => {
       testSpecificMocks.logLevel = 'warn';
       testSpecificMocks.logLevelData = {
-        fileMatcher: '.*specific-file-name[^/]+js',
-        fileMatchOverwritePriority: true,
-        functionNameMatcher: '.*awesomeName$',
-        functionNameMatchOverwritePriority: true,
+        matchSource: '.*specific-file-name[^/]+js',
+        matchFunctionName: '.*awesomeName$',
         methodName: 'warnMethod',
       };
+    });
+    afterEach(() => {
+      privateApi.getMatcher.mockClear();
+    });
+    afterAll(() => {
+      privateApi.getMatcher.mockRestore();
+    });
+
+    it('retrieves matcher RegExp for source and function name', () => {
+      privateApi.getLogLevelData(testSpecificMocks.logLevel, testSpecificMocks.logLevelData);
+
+      expect(privateApi.getMatcher.mock.calls).toEqual(
+        [
+          [
+            testSpecificMocks.logLevelData.matchSource,
+          ],
+          [
+            testSpecificMocks.logLevelData.matchFunctionName,
+          ],
+        ]
+      );
     });
 
     it('returns object with the provided properties when they have values', () => {
       expect(privateApi.getLogLevelData(testSpecificMocks.logLevel, testSpecificMocks.logLevelData)).toEqual(
         {
-          fileMatcher: testSpecificMocks.logLevelData.fileMatcher,
-          fileMatchOverwritePriority: testSpecificMocks.logLevelData.fileMatchOverwritePriority,
-          functionNameMatcher: testSpecificMocks.logLevelData.functionNameMatcher,
-          functionNameMatchOverwritePriority: testSpecificMocks.logLevelData.functionNameMatchOverwritePriority,
+          matchFunctionName: testSpecificMocks.logLevelData.matchFunctionName,
+          matchFunctionNameRegExp: /.*awesomeName$/,
+          matchSource: testSpecificMocks.logLevelData.matchSource,
+          matchSourceRegExp: /.*specific-file-name[^\/]+js/, // eslint-disable-line no-useless-escape
           methodName: testSpecificMocks.logLevelData.methodName,
         }
       );
@@ -68,10 +134,10 @@ describe('logging.js', () => {
       testSpecificMocks.logLevelData = {};
       expect(privateApi.getLogLevelData(testSpecificMocks.logLevel, testSpecificMocks.logLevelData)).toEqual(
         {
-          fileMatcher: '',
-          fileMatchOverwritePriority: false,
-          functionNameMatcher: '',
-          functionNameMatchOverwritePriority: false,
+          matchFunctionName: '',
+          matchFunctionNameRegExp: '',
+          matchSource: '',
+          matchSourceRegExp: '',
           methodName: testSpecificMocks.logLevel,
         }
       );

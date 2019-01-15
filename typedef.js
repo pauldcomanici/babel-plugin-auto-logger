@@ -6,11 +6,11 @@
  * Plugin settings for log level
  *
  * @typedef {Object} LoggerLevelObj
+ * @property {String} matchSource - regular expression as string for sources that should have current log level
+ * @property {String|RegExp} matchSourceRegExp - regular expression based on `matchSource` or empty string if `matchSource` has falsy value
+ * @property {String} matchFunctionName - regular expression as string for function name that should have current log level
+ * @property {String|RegExp} matchFunctionNameRegExp - regular expression based on `matchFunctionName` or empty string if `matchFunctionName` has falsy value
  * @property {String} methodName - property name for logger object that is a function and will be called for this log level
- * @property {String} fileMatcher - regular expression for sources that should have current log level
- * @property {Boolean} fileMatchOverwritePriority - flag to know if there is a match based on file => this log level should overwrite higher priority log level
- * @property {String} functionNameMatcher - regular expression for function name that should have current log level
- * @property {Boolean} functionNameMatchOverwritePriority - flag to know if there is a match based on function name => this log level should overwrite higher priority log level
  */
 
 /**

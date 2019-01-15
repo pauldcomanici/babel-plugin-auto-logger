@@ -474,6 +474,158 @@ describe('utils.js', () => {
     });
   });
 
+  describe('privateApi.testMatcher', () => {
+    beforeEach(() => {
+      testSpecificMocks.matcher = /source-or-function-name-matcher/;
+      testSpecificMocks.value = 'source-or-function-name-matcher.js';
+    });
+
+    it('returns true when matcher is a RegExp and value is matched', () => {
+      expect(privateApi.testMatcher(testSpecificMocks.matcher, testSpecificMocks.value)).toBe(true);
+    });
+
+    it('returns false when matcher is a RegExp and value is not matched', () => {
+      testSpecificMocks.value = 'something-that-does-not-match';
+
+      expect(privateApi.testMatcher(testSpecificMocks.matcher, testSpecificMocks.value)).toBe(false);
+    });
+
+    it('returns false when matcher has falsy value', () => {
+      testSpecificMocks.matcher = '';
+
+      expect(privateApi.testMatcher(testSpecificMocks.matcher, testSpecificMocks.value)).toBe(false);
+    });
+  });
+
+  describe('privateApi.testLogLevelMatcher', () => {
+    beforeEach(() => {
+      jest.spyOn(privateApi, 'testMatcher').mockReturnValue(false);
+    });
+    beforeEach(() => {
+      testSpecificMocks.levels = {
+        l1: {},
+        l2: {
+          matchFunctionNameRegExp: 'matchFunctionNameRegExp-l2',
+          matchSourceRegExp: 'matchSourceRegExp-l2',
+        },
+        l3: {},
+      };
+      testSpecificMocks.levelsByPriority = ['l1', 'l2', 'l3', 'l4', 'l5'];
+      testSpecificMocks.knownData = {
+        name: 'function-name',
+        source: 'file-name-as-path',
+      };
+      testSpecificMocks.logLevel = 'l2';
+    });
+    afterEach(() => {
+      privateApi.testMatcher.mockClear();
+    });
+    afterAll(() => {
+      privateApi.testMatcher.mockRestore();
+    });
+
+    it('returns false when log level has the higher priority', () => {
+      testSpecificMocks.logLevel = 'l1';
+
+      expect(
+        privateApi.testLogLevelMatcher(
+          testSpecificMocks.levels,
+          testSpecificMocks.levelsByPriority,
+          testSpecificMocks.knownData,
+        )(testSpecificMocks.logLevel)
+      ).toBe(false);
+    });
+
+    it('returns false when log level has the lowest priority', () => {
+      testSpecificMocks.logLevel = 'l5';
+
+      expect(
+        privateApi.testLogLevelMatcher(
+          testSpecificMocks.levels,
+          testSpecificMocks.levelsByPriority,
+          testSpecificMocks.knownData,
+        )(testSpecificMocks.logLevel)
+      ).toBe(false);
+    });
+
+    it('tests for match on source', () => {
+      privateApi.testLogLevelMatcher(
+        testSpecificMocks.levels,
+        testSpecificMocks.levelsByPriority,
+        testSpecificMocks.knownData,
+      )(testSpecificMocks.logLevel);
+
+      expect(
+        privateApi.testMatcher.mock.calls[0]
+      ).toEqual(
+        [
+          testSpecificMocks.levels.l2.matchSourceRegExp,
+          testSpecificMocks.knownData.source,
+        ]
+      );
+    });
+
+    it('returns true when there was a match on source', () => {
+      privateApi.testMatcher.mockReturnValueOnce(true);
+
+      expect(
+        privateApi.testLogLevelMatcher(
+          testSpecificMocks.levels,
+          testSpecificMocks.levelsByPriority,
+          testSpecificMocks.knownData,
+        )(testSpecificMocks.logLevel)
+      ).toBe(
+        true
+      );
+    });
+
+    it('tests for match on function name when there is no match on source', () => {
+      privateApi.testLogLevelMatcher(
+        testSpecificMocks.levels,
+        testSpecificMocks.levelsByPriority,
+        testSpecificMocks.knownData,
+      )(testSpecificMocks.logLevel);
+
+      expect(
+        privateApi.testMatcher.mock.calls[1]
+      ).toEqual(
+        [
+          testSpecificMocks.levels.l2.matchFunctionNameRegExp,
+          testSpecificMocks.knownData.name,
+        ]
+      );
+    });
+
+    it('returns true when there was a match on function name but not on source', () => {
+      privateApi.testMatcher
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(true);
+
+      expect(
+        privateApi.testLogLevelMatcher(
+          testSpecificMocks.levels,
+          testSpecificMocks.levelsByPriority,
+          testSpecificMocks.knownData,
+        )(testSpecificMocks.logLevel)
+      ).toBe(
+        true
+      );
+    });
+
+    it('returns false when there is no match on source or on function name', () => {
+      expect(
+        privateApi.testLogLevelMatcher(
+          testSpecificMocks.levels,
+          testSpecificMocks.levelsByPriority,
+          testSpecificMocks.knownData,
+        )(testSpecificMocks.logLevel)
+      ).toBe(
+        false
+      );
+    });
+
+  });
+
   describe('privateApi.getDefaultLogLevelName', () => {
     beforeAll(() => {
       jest.spyOn(loggingData, 'getLevels').mockReturnValue({
@@ -578,11 +730,147 @@ describe('utils.js', () => {
     });
   });
 
+  describe('privateApi.getLoggingMethod', () => {
+    beforeAll(() => {
+      jest.spyOn(loggingData, 'getLevelsByPriority').mockReturnValue(
+        ['error', 'warn', 'info', 'debug', 'log']
+      );
+    });
+    beforeEach(() => {
+      testSpecificMocks.path = {
+        node: {},
+      };
+      testSpecificMocks.state = {
+        babelPluginLoggerSettings: {
+          loggingData: {
+            levels: {
+              debug: {
+                methodName: 'debugMethod',
+              },
+              error: {
+                methodName: 'errorMethod',
+              },
+              info: {
+                methodName: 'infoMethod',
+              },
+              log: {
+                methodName: 'logMethod',
+              },
+              warn: {
+                methodName: 'warnMethod',
+              },
+            },
+          },
+        },
+      };
+      testSpecificMocks.knownData = {
+        column: 11,
+        line: 22,
+        name: 'function-name',
+        source: 'file-name-or-path',
+      };
+      testSpecificMocks.defaultLogLevelName = 'warn';
+
+
+      testSpecificMocks.testLogLevelMatcherFn = jest.fn().mockReturnValue(false);
+      jest.spyOn(privateApi, 'testLogLevelMatcher').mockReturnValue(
+        testSpecificMocks.testLogLevelMatcherFn
+      );
+    });
+    afterEach(() => {
+      loggingData.getLevelsByPriority.mockClear();
+      privateApi.testLogLevelMatcher.mockRestore();
+    });
+    afterAll(() => {
+      loggingData.getLevelsByPriority.mockRestore();
+    });
+
+    it('retrieves log levels by priority', () => {
+      privateApi.getLoggingMethod(
+        testSpecificMocks.path,
+        testSpecificMocks.state,
+        testSpecificMocks.knownData,
+        testSpecificMocks.defaultLogLevelName,
+      );
+
+      expect(loggingData.getLevelsByPriority).toHaveBeenCalledWith();
+    });
+
+    it('returns method name based on default log level when log level is with the highest priority', () => {
+      testSpecificMocks.defaultLogLevelName = 'error';
+
+      expect(
+        privateApi.getLoggingMethod(
+          testSpecificMocks.path,
+          testSpecificMocks.state,
+          testSpecificMocks.knownData,
+          testSpecificMocks.defaultLogLevelName,
+        )
+      ).toBe('errorMethod');
+    });
+
+    it('tests every log level if there is a match on source or function name (function generator)', () => {
+      privateApi.getLoggingMethod(
+        testSpecificMocks.path,
+        testSpecificMocks.state,
+        testSpecificMocks.knownData,
+        testSpecificMocks.defaultLogLevelName,
+      );
+
+      expect(
+        privateApi.testLogLevelMatcher
+      ).toHaveBeenCalledWith(
+        testSpecificMocks.state.babelPluginLoggerSettings.loggingData.levels,
+        ['error', 'warn', 'info', 'debug', 'log'], // levelsByPriority
+        testSpecificMocks.knownData,
+      );
+    });
+
+    it('tests every log level if there is a match on source or function name (callback)', () => {
+      privateApi.getLoggingMethod(
+        testSpecificMocks.path,
+        testSpecificMocks.state,
+        testSpecificMocks.knownData,
+        testSpecificMocks.defaultLogLevelName,
+      );
+
+      expect(
+        testSpecificMocks.testLogLevelMatcherFn.mock.calls
+      ).toMatchSnapshot();
+    });
+
+    it('returns method name based on log level that has match on source or function name', () => {
+      testSpecificMocks.testLogLevelMatcherFn
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(true);
+      expect(
+        privateApi.getLoggingMethod(
+          testSpecificMocks.path,
+          testSpecificMocks.state,
+          testSpecificMocks.knownData,
+          testSpecificMocks.defaultLogLevelName,
+        )
+      ).toBe('infoMethod');
+    });
+
+    it('returns method name based on default log level when there is no match on source or function name for other log levels', () => {
+      expect(
+        privateApi.getLoggingMethod(
+          testSpecificMocks.path,
+          testSpecificMocks.state,
+          testSpecificMocks.knownData,
+          testSpecificMocks.defaultLogLevelName,
+        )
+      ).toBe('warnMethod');
+    });
+  });
+
   describe('privateApi.getLogLevel', () => {
     // Note: this function will be updated to support different levels
     beforeAll(() => {
       jest.spyOn(privateApi, 'getDefaultLogLevelName').mockReturnValue('log');
-      jest.spyOn(types, 'isCatchClause').mockReturnValue(false);
+      jest.spyOn(privateApi, 'getLoggingMethod').mockReturnValue('logMethod');
     });
     beforeEach(() => {
       testSpecificMocks.path = {
@@ -622,11 +910,11 @@ describe('utils.js', () => {
     });
     afterEach(() => {
       privateApi.getDefaultLogLevelName.mockClear();
-      types.isCatchClause.mockClear();
+      privateApi.getLoggingMethod.mockClear();
     });
     afterAll(() => {
       privateApi.getDefaultLogLevelName.mockRestore();
-      types.isCatchClause.mockRestore();
+      privateApi.getLoggingMethod.mockRestore();
     });
 
     it('determines default log level', () => {
@@ -639,13 +927,24 @@ describe('utils.js', () => {
       );
     });
 
-    it('returns method name that should be used for logging based on default log level', () => {
+    it('determines log method to use', () => {
+      privateApi.getLogLevel(testSpecificMocks.path, testSpecificMocks.state, testSpecificMocks.knownData);
+
+      expect(privateApi.getLoggingMethod).toHaveBeenCalledWith(
+        testSpecificMocks.path,
+        testSpecificMocks.state,
+        testSpecificMocks.knownData,
+        privateApi.getDefaultLogLevelName(),
+      );
+    });
+
+    it('returns log method to use', () => {
       expect(privateApi.getLogLevel(
         testSpecificMocks.path,
         testSpecificMocks.state,
         testSpecificMocks.knownData
-      )).toEqual(
-        'logMethod'
+      )).toBe(
+        privateApi.getLoggingMethod()
       );
     });
   });
