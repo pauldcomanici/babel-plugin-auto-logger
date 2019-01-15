@@ -10,9 +10,12 @@
 > - :nail_care:  [Polish]
 
 
-## v0.7.0
+## v1.0.0
+:rocket: ability to use specific logging by source (file name/path) matching
+:rocket: ability to use specific logging by function name matching
 :house: add badge for dependencies
-:house: add badge for paypal donate and patreon support
+:house: add badge for paypal donate
+:house: add badge for patreon support
 :house: update project dependencies
 :memo: document how version can be updated
 

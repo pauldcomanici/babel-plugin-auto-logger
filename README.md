@@ -115,18 +115,24 @@ Abstract example with all plugin options:
     "levelForMemberExpressionCatch": "error",
     "levels": {
       "debug": {
+        "matchFunctionName": "^(get|set)$",
+        "matchSource": "utils.js$",
         "methodName": "myDebug"
       },
       "error": {
         "methodName": "myError"
       },
       "info": {
+        "matchFunctionName": "adapt",
+        "matchSource": "api.js$",
         "methodName": "myInfo"
       },
       "log": {
         "methodName": "myLog"
       },
       "warn": {
+        "matchFunctionName": "matcher-for-function-name",
+        "matchSource": "matcher-for-source",
         "methodName": "myWarn"
       }
     },
@@ -156,18 +162,24 @@ Abstract example with all plugin options:
   ```text
   {
     debug: {
+      matchFunctionName: '',
+      matchSource: '',
       methodName: 'debug',
     },
     error: {
       methodName: 'error',
     },
     info: {
+      matchFunctionName: '',
+      matchSource: '',
       methodName: 'info',
     },
     log: {
       methodName: 'log',
     },
     warn: {
+      matchFunctionName: '',
+      matchSource: '',
       methodName: 'warn',
     },
   }
@@ -187,7 +199,8 @@ Abstract example with all plugin options:
 - Data type: Object
 - Default value: specific for every log level
 - Details:
-  - allows you to use your own method name for logging API 
+  - allows to use your own method name for logging API
+  - ability to control when this log level will be used (only for warn, info & debug) based on regular expression that tests source or function name
 
 #### loggingData.name
 - Data type: String
@@ -269,7 +282,3 @@ If you want to control the API (service) that should be used, you will use `name
 >    return a + b;
 >  }
 >  ```
-
-## Coming soon
-- Ability to use specific logging method depending on the function name
-- Ability to use specific logging method depending on the file path
