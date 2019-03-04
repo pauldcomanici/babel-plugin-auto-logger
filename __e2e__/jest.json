@@ -3,5 +3,7 @@
   "rootDir": "./",
   "automock": false,
   "verbose": false,
-  "setupTestFrameworkScriptFile": "<rootDir>/index.js"
+  "setupFilesAfterEnv": [
+    "<rootDir>/index.js"
+  ]
 }
