@@ -6,7 +6,8 @@ cache:
     - "node_modules"
 language: node_js
 node_js:
-  - "node"
+#  - "node" // there is an issue with node 11.11.0 and jest ( TypeError: Cannot assign to read only property 'Symbol(Symbol.toStringTag)' of object '#<process>')
+  - "lts"
 
 jobs:
   include:
