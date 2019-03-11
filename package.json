@@ -15,10 +15,10 @@
     "@babel/core": "7.3.4",
     "@babel/helper-plugin-test-runner": "7.1.0",
     "@babel/preset-env": "7.3.4",
-    "babel-jest": "24.1.0",
+    "babel-jest": "24.4.0",
     "codecov": "3.2.0",
-    "eslint": "5.15.0",
-    "jest": "24.1.0",
+    "eslint": "5.15.1",
+    "jest": "24.4.0",
     "rimraf": "2.6.3"
   },
   "peerDependencies": {},
@@ -43,5 +43,5 @@
   "files": [
     "lib"
   ],
-  "version": "1.0.1"
+  "version": "1.0.2"
 }
