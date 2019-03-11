@@ -10,6 +10,11 @@
 > - :nail_care:  [Polish]
 
 
+## v1.0.2
+* :house: Update dependencies
+* :bug: Use node LTS version as with latest (11.11.0) there is an error with jest
+
+
 ## v1.0.1
 * :house: Update dependencies
 
