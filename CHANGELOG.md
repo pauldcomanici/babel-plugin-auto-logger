@@ -13,6 +13,7 @@
 ## v1.0.3
 * :house: Update dependencies
 * :house: Use latest node version for CI
+* :house: Add postinstall script
 
 
 ## v1.0.2

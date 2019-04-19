@@ -27,6 +27,7 @@
     "compile": "rimraf lib && babel src --out-dir lib",
     "lint": "eslint ./src",
     "prepublishOnly": "npm run build",
+    "postinstall": "node ./scripts/postinstall.js || exit 0",
     "report-coverage": "codecov",
     "test": "jest --config=./config/jest-ut.json",
     "test-e2e": "jest --config=./__e2e__/jest.json",
