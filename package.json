@@ -8,17 +8,17 @@
   "author": "darkyndy",
   "dependencies": {
     "@babel/helper-plugin-utils": "7.0.0",
-    "@babel/types": "7.3.4"
+    "@babel/types": "7.4.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.2.3",
-    "@babel/core": "7.3.4",
+    "@babel/cli": "7.4.3",
+    "@babel/core": "7.4.3",
     "@babel/helper-plugin-test-runner": "7.1.0",
-    "@babel/preset-env": "7.3.4",
-    "babel-jest": "24.4.0",
-    "codecov": "3.2.0",
-    "eslint": "5.15.1",
-    "jest": "24.4.0",
+    "@babel/preset-env": "7.4.3",
+    "babel-jest": "24.7.1",
+    "codecov": "3.3.0",
+    "eslint": "5.16.0",
+    "jest": "24.7.1",
     "rimraf": "2.6.3"
   },
   "peerDependencies": {},
@@ -27,6 +27,7 @@
     "compile": "rimraf lib && babel src --out-dir lib",
     "lint": "eslint ./src",
     "prepublishOnly": "npm run build",
+    "postinstall": "node ./scripts/postinstall.js || exit 0",
     "report-coverage": "codecov",
     "test": "jest --config=./config/jest-ut.json",
     "test-e2e": "jest --config=./__e2e__/jest.json",
@@ -43,5 +44,5 @@
   "files": [
     "lib"
   ],
-  "version": "1.0.2"
+  "version": "1.0.3"
 }
