@@ -11,6 +11,7 @@
       src="https://codecov.io/gh/darkyndy/babel-plugin-auto-logger/branch/master/graph/badge.svg"
     />
   </a>
+<a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fdarkyndy%2Fbabel-plugin-auto-logger?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdarkyndy%2Fbabel-plugin-auto-logger.svg?type=shield"/></a>
   <a href="https://snyk.io/test/github/darkyndy/babel-plugin-auto-logger?targetFile=package.json">
     <img
       alt="Known Vulnerabilities"
@@ -57,6 +58,9 @@
     />
   </a>
 </p>
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdarkyndy%2Fbabel-plugin-auto-logger.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdarkyndy%2Fbabel-plugin-auto-logger?ref=badge_large)
 
 # babel-plugin-auto-logger
 Babel Plugin that will automatically add logging to your existing JS code.
