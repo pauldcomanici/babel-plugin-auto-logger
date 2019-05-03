@@ -43,6 +43,12 @@
       src="https://img.shields.io/npm/l/babel-plugin-auto-logger.svg"
     />
   </a>
+  <a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fdarkyndy%2Fbabel-plugin-auto-logger?ref=badge_shield">
+    <img
+      alt="FOSSA Status"
+      src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdarkyndy%2Fbabel-plugin-auto-logger.svg?type=shield"
+    />
+  </a>
   <br/>
   <a href="https://www.patreon.com/paul_comanici">
     <img
