@@ -18,3 +18,14 @@ jobs:
       script: npm run test-coverage && npm run report-coverage
     - stage: compile&test-e2e
       script: npm run test-e2e-latest
+    - stage: fossa
+      before_script:
+        - "curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | sudo bash"
+      script:
+        - fossa init
+        - fossa analyze
+      after_success:
+        - cd src && fossa test
+
+notifications:
+  webhooks: https://app.fossa.io/hooks/travisci
