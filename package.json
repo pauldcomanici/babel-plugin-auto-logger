@@ -42,7 +42,8 @@
     "auto-logger"
   ],
   "files": [
-    "lib"
+    "lib",
+    "scripts"
   ],
   "version": "1.0.4"
 }
