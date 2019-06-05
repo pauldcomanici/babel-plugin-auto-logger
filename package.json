@@ -12,13 +12,13 @@
   },
   "devDependencies": {
     "@babel/cli": "7.4.4",
-    "@babel/core": "7.4.4",
+    "@babel/core": "7.4.5",
     "@babel/helper-plugin-test-runner": "7.1.0",
-    "@babel/preset-env": "7.4.4",
-    "babel-jest": "24.7.1",
-    "codecov": "3.3.0",
+    "@babel/preset-env": "7.4.5",
+    "babel-jest": "24.8.0",
+    "codecov": "3.5.0",
     "eslint": "5.16.0",
-    "jest": "24.7.1",
+    "jest": "24.8.0",
     "rimraf": "2.6.3"
   },
   "peerDependencies": {},
@@ -45,5 +45,5 @@
     "lib",
     "scripts"
   ],
-  "version": "1.0.4"
+  "version": "1.0.5"
 }
