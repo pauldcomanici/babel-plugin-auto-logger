@@ -4,9 +4,7 @@ function sum(a, b) {
   myLogger.myDebug("[custom-options/logger-by-function-name/input.js:1:19]", "sum");
 
   try {
-    const myPromise = new Promise(() => {
-      myLogger.myLog("[custom-options/logger-by-function-name/input.js:4:40]", "array-item-0");
-    });
+    const myPromise = new Promise(() => {});
     myPromise.catch(reason => {
       myLogger.myError("[custom-options/logger-by-function-name/input.js:6:32]", "memberExpressionCatch", reason);
       const rejectHandler = 'some implementation for sum';
@@ -23,9 +21,7 @@ function sub(a, b) {
   myLogger.myInfo("[custom-options/logger-by-function-name/input.js:16:19]", "sub");
 
   try {
-    const myPromise = new Promise(() => {
-      myLogger.myLog("[custom-options/logger-by-function-name/input.js:19:40]", "array-item-0");
-    });
+    const myPromise = new Promise(() => {});
     myPromise.catch(reason => {
       myLogger.myError("[custom-options/logger-by-function-name/input.js:21:32]", "memberExpressionCatch", reason);
       const rejectHandler = 'some implementation for sub';
@@ -42,9 +38,7 @@ function multiply(a, b) {
   myLogger.myWarn("[custom-options/logger-by-function-name/input.js:31:24]", "multiply");
 
   try {
-    const myPromise = new Promise(() => {
-      myLogger.myLog("[custom-options/logger-by-function-name/input.js:34:40]", "array-item-0");
-    });
+    const myPromise = new Promise(() => {});
     myPromise.catch(reason => {
       myLogger.myError("[custom-options/logger-by-function-name/input.js:36:32]", "memberExpressionCatch", reason);
       const rejectHandler = 'some implementation for multiply';
@@ -55,4 +49,21 @@ function multiply(a, b) {
   }
 
   return a * b;
+}
+
+function division(a, b) {
+  myLogger.myLog("[custom-options/logger-by-function-name/input.js:46:24]", "division");
+
+  try {
+    const myPromise = new Promise(() => {});
+    myPromise.catch(reason => {
+      myLogger.myError("[custom-options/logger-by-function-name/input.js:51:32]", "memberExpressionCatch", reason);
+      const rejectHandler = 'some implementation for division';
+    });
+  } catch (ex) {
+    myLogger.myError("[custom-options/logger-by-function-name/input.js:54:15]", "catchClause", ex);
+    const catchBlock = 'demo purpose for division';
+  }
+
+  return a / b;
 }

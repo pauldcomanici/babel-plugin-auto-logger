@@ -536,18 +536,6 @@ describe('utils.js', () => {
       ).toBe(false);
     });
 
-    it('returns false when log level has the lowest priority', () => {
-      testSpecificMocks.logLevel = 'l5';
-
-      expect(
-        privateApi.testLogLevelMatcher(
-          testSpecificMocks.levels,
-          testSpecificMocks.levelsByPriority,
-          testSpecificMocks.knownData,
-        )(testSpecificMocks.logLevel)
-      ).toBe(false);
-    });
-
     it('tests for match on source', () => {
       privateApi.testLogLevelMatcher(
         testSpecificMocks.levels,
@@ -692,7 +680,7 @@ describe('utils.js', () => {
         testSpecificMocks.path,
         testSpecificMocks.state,
         testSpecificMocks.knownData
-      )).toEqual(
+      )).toBe(
         'info'
       );
     });
@@ -704,7 +692,7 @@ describe('utils.js', () => {
         testSpecificMocks.path,
         testSpecificMocks.state,
         testSpecificMocks.knownData
-      )).toEqual(
+      )).toBe(
         'debug'
       );
     });
@@ -719,13 +707,37 @@ describe('utils.js', () => {
       expect(loggingData.getLevels).toHaveBeenCalledWith();
     });
 
-    it('returns level for log if the path does not represents a catch clause or catch member expression', () => {
+    it('returns level for log if the path does not represents a catch clause or catch member expression and there is no matcher for it (function or source name)', () => {
       expect(privateApi.getDefaultLogLevelName(
         testSpecificMocks.path,
         testSpecificMocks.state,
         testSpecificMocks.knownData
-      )).toEqual(
+      )).toBe(
         'log'
+      );
+    });
+
+    it('returns empty string if the path does not represents a catch clause or catch member expression and there is matcher for source name', () => {
+      testSpecificMocks.state.babelPluginLoggerSettings.loggingData.levels.log.matchSource = 'file name matcher';
+
+      expect(privateApi.getDefaultLogLevelName(
+        testSpecificMocks.path,
+        testSpecificMocks.state,
+        testSpecificMocks.knownData
+      )).toBe(
+        ''
+      );
+    });
+
+    it('returns empty string if the path does not represents a catch clause or catch member expression and there is matcher for function name', () => {
+      testSpecificMocks.state.babelPluginLoggerSettings.loggingData.levels.log.matchFunctionName = 'function name matcher';
+
+      expect(privateApi.getDefaultLogLevelName(
+        testSpecificMocks.path,
+        testSpecificMocks.state,
+        testSpecificMocks.knownData
+      )).toBe(
+        ''
       );
     });
   });
@@ -1024,6 +1036,34 @@ describe('utils.js', () => {
       );
     });
 
+    it('retrieves second identifier string (method name) for member expression property', () => {
+      privateApi.insertLogging(
+        testSpecificMocks.path,
+        testSpecificMocks.insertPath,
+        testSpecificMocks.state,
+        testSpecificMocks.partialData,
+      );
+
+      expect(privateApi.getLogLevel).toHaveBeenCalledWith(
+        testSpecificMocks.path,
+        testSpecificMocks.state,
+        testSpecificMocks.knownData,
+      );
+    });
+
+    it('nothing is inserted when the log methos has falsy value', () => {
+      privateApi.getLogLevel.mockReturnValueOnce('');
+
+      privateApi.insertLogging(
+        testSpecificMocks.path,
+        testSpecificMocks.insertPath,
+        testSpecificMocks.state,
+        testSpecificMocks.partialData,
+      );
+
+      expect(testSpecificMocks.insertPath.unshiftContainer).not.toHaveBeenCalled();
+    });
+
     it('retrieves expression arguments, result will be used by call expression', () => {
       privateApi.insertLogging(
         testSpecificMocks.path,
@@ -1049,21 +1089,6 @@ describe('utils.js', () => {
 
       expect(utils.getLoggerName).toHaveBeenCalledWith(
         testSpecificMocks.state,
-      );
-    });
-
-    it('retrieves second identifier string (method name) for member expression property', () => {
-      privateApi.insertLogging(
-        testSpecificMocks.path,
-        testSpecificMocks.insertPath,
-        testSpecificMocks.state,
-        testSpecificMocks.partialData,
-      );
-
-      expect(privateApi.getLogLevel).toHaveBeenCalledWith(
-        testSpecificMocks.path,
-        testSpecificMocks.state,
-        testSpecificMocks.knownData,
       );
     });
 

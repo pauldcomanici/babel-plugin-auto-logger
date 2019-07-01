@@ -20,7 +20,7 @@
               "methodName": "myInfo"
             },
             "log": {
-              "matchFunctionName": "it-is-ignored-for-log-level",
+              "matchFunctionName": "division",
               "methodName": "myLog"
             },
             "warn": {

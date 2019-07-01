@@ -42,3 +42,18 @@ function multiply(a, b) {
 
   return a * b;
 }
+
+function division(a, b) {
+
+  try {
+    const myPromise = new Promise(() => {});
+
+    myPromise.catch((reason) => {
+      const rejectHandler = 'some implementation for division';
+    })
+  } catch (ex) {
+    const catchBlock = 'demo purpose for division';
+  }
+
+  return a / b;
+}

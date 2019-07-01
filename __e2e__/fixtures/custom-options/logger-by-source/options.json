@@ -19,6 +19,7 @@
               "methodName": "myInfo"
             },
             "log": {
+              "matchSource": "none-do-not-add-verbose",
               "methodName": "myLog"
             },
             "warn": {

@@ -248,14 +248,9 @@ privateApi.getName = (path) => {
  * @param {String} value - source for the code or function name
  * @returns {Boolean} matched
  */
-privateApi.testMatcher = (matcher, value) => {
-  if (matcher) {
-    // if we have matcher
-    return matcher.test(value);
-  }
-
-  return false;
-};
+privateApi.testMatcher = (matcher, value) => (
+  matcher && matcher.test(value) || false
+);
 
 /**
  * Test matcher for every log level. Returned function is the callback for find method.
@@ -266,8 +261,8 @@ privateApi.testMatcher = (matcher, value) => {
  * @return {Function} testLogLevelMatcherFn
  */
 privateApi.testLogLevelMatcher = (levels, levelsByPriority, knownData) => (logLevel) => {
-  if (logLevel === levelsByPriority[0] || logLevel === levelsByPriority[4]) {
-    // ignore error or log levels
+  if (logLevel === levelsByPriority[0]) {
+    // do not test error level (always log it)
     return false;
   }
 
@@ -294,6 +289,7 @@ privateApi.getDefaultLogLevelName = (path, state, knownData) => {
   const {
     levelForMemberExpressionCatch,
     levelForTryCatch,
+    levels,
   } = state.babelPluginLoggerSettings.loggingData;
 
   const isCatchClause = types.isCatchClause(path);
@@ -305,9 +301,15 @@ privateApi.getDefaultLogLevelName = (path, state, knownData) => {
     return levelForMemberExpressionCatch;
   }
 
-  const levels = loggingData.getLevels();
+  const loggingMethods = loggingData.getLevels();
+  const verboseLoggingMethod = loggingMethods.log;
+  const verboseLoggingSettings = levels[verboseLoggingMethod];
+  if (!verboseLoggingSettings.matchSource && !verboseLoggingSettings.matchFunctionName) {
+    // if we do not have any restriction for verbose logging, consider to be the default logging method
+    return verboseLoggingMethod;
+  }
 
-  return levels.log;
+  return '';
 };
 
 /**
@@ -334,7 +336,7 @@ privateApi.getLoggingMethod = (path, state, knownData, defaultLogLevelName) => {
   }
   const logLevelName = newLoglevelName || defaultLogLevelName;
 
-  return levels[logLevelName].methodName;
+  return levels[logLevelName] && levels[logLevelName].methodName;
 };
 
 /**
@@ -372,22 +374,26 @@ privateApi.insertLogging = (path, insertPath, state, partialData) => {
     source,
   };
 
-  insertPath.unshiftContainer(
-    'body',
-    types.expressionStatement(
-      types.callExpression(
-        types.memberExpression(
-          types.identifier(service.getLoggerName(state)),
-          types.identifier(privateApi.getLogLevel(path, state, knownData))
-        ),
-        loggingArguments.get(
-          path,
-          state,
-          knownData
+  const useLogLevel = privateApi.getLogLevel(path, state, knownData);
+  if (useLogLevel) {
+    // only if we have log level method => insert code for logging
+    insertPath.unshiftContainer(
+      'body',
+      types.expressionStatement(
+        types.callExpression(
+          types.memberExpression(
+            types.identifier(service.getLoggerName(state)),
+            types.identifier(useLogLevel)
+          ),
+          loggingArguments.get(
+            path,
+            state,
+            knownData
+          )
         )
       )
-    )
-  );
+    );
+  }
 };
 
 /**
