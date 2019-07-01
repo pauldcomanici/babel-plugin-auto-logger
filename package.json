@@ -17,7 +17,7 @@
     "@babel/preset-env": "7.4.5",
     "babel-jest": "24.8.0",
     "codecov": "3.5.0",
-    "eslint": "5.16.0",
+    "eslint": "6.0.1",
     "jest": "24.8.0",
     "rimraf": "2.6.3"
   },
@@ -45,5 +45,5 @@
     "lib",
     "scripts"
   ],
-  "version": "1.0.5"
+  "version": "1.1.0"
 }
