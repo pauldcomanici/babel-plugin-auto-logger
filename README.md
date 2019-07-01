@@ -134,6 +134,7 @@ Abstract example with all plugin options:
         "methodName": "myInfo"
       },
       "log": {
+        "matchSource": "",
         "methodName": "myLog"
       },
       "warn": {
@@ -181,6 +182,8 @@ Abstract example with all plugin options:
       methodName: 'info',
     },
     log: {
+      matchFunctionName: '',
+      matchSource: '',
       methodName: 'log',
     },
     warn: {
@@ -254,7 +257,37 @@ Abstract example with all plugin options:
   - if the pattern matches both the inclusion and exclusion then the pattern will be excluded
 
 
-### Control logging API
+### Use-cases / examples
+
+You can check [E2E tests](__e2e__/fixtures) for possible examples that are used in testing.
+For every folder you will see:
+  - `options.json` (plugin configuration)
+  - `input.js` (source code)
+  - `output.js` (output code)
+
+
+#### Disable generation of default verbose logging
+By default the plugin will log every non exception/promise rejection using verbose logging (`log` method).
+If you want to disable it, here is an example configuration:
+```json
+{
+  "plugins": [
+    [
+      "babel-plugin-auto-logger",
+      {
+        "levels": {
+          "log": {
+            "matchSource": "hopefully-there-is-no-file-name-with-this-name"
+          }
+        }
+      }
+    ]
+  ]
+}
+```
+
+
+#### Control logging API
 By default plugin will insert logs based on [console API](https://developer.mozilla.org/en-US/docs/Web/API/console)
 
 If you want to control the API (service) that should be used, you will use `name` property from `loggingData` object. Example:
@@ -288,3 +321,4 @@ If you want to control the API (service) that should be used, you will use `name
 >    return a + b;
 >  }
 >  ```
+
