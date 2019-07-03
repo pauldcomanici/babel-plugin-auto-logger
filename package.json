@@ -8,7 +8,8 @@
   "author": "darkyndy",
   "dependencies": {
     "@babel/helper-plugin-utils": "7.0.0",
-    "@babel/types": "7.4.4"
+    "@babel/types": "7.4.4",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "@babel/cli": "7.4.4",
@@ -33,7 +34,9 @@
     "test-e2e": "jest --config=./__e2e__/jest.json",
     "test-e2e-latest": "npm run compile && npm run test-e2e",
     "test-watch": "npm run test -- --watch",
-    "test-coverage": "npm run test -- --coverage"
+    "test-coverage": "npm run test -- --coverage",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "keywords": [
     "babel-plugin",
@@ -45,5 +48,6 @@
     "lib",
     "scripts"
   ],
-  "version": "1.1.0"
+  "version": "1.1.0",
+  "snyk": true
 }
