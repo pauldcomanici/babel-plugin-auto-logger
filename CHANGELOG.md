@@ -10,6 +10,10 @@
 > - :nail_care:  [Polish]
 
 
+## v1.1.1
+* :house: Enable FOSSA from CI
+
+
 ## v1.1.0
 * :rocket: ability to use specific logging by source matching (file name/path) for verbose logging
 * :house: Update dependencies
