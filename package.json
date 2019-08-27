@@ -8,19 +8,20 @@
   "author": "darkyndy",
   "dependencies": {
     "@babel/helper-plugin-utils": "7.0.0",
-    "@babel/types": "7.5.0"
+    "@babel/types": "7.5.5"
   },
   "devDependencies": {
-    "@babel/cli": "7.5.0",
-    "@babel/core": "7.5.4",
+    "@babel/cli": "7.5.5",
+    "@babel/core": "7.5.5",
     "@babel/helper-plugin-test-runner": "7.1.0",
-    "@babel/preset-env": "7.5.4",
-    "babel-jest": "24.8.0",
+    "@babel/preset-env": "7.5.5",
+    "acorn": "7.0.0",
+    "babel-jest": "24.9.0",
     "codecov": "3.5.0",
-    "eslint": "6.0.1",
-    "jest": "24.8.0",
-    "rimraf": "2.6.3",
-    "snyk": "1.192.5"
+    "eslint": "6.2.2",
+    "jest": "24.9.0",
+    "rimraf": "3.0.0",
+    "snyk": "1.221.0"
   },
   "peerDependencies": {},
   "scripts": {

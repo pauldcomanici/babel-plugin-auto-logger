@@ -12,6 +12,7 @@
 
 ## v1.1.1
 * :house: Enable FOSSA from CI
+* :house: Update dependencies
 
 
 ## v1.1.0
