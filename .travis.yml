@@ -27,5 +27,3 @@ jobs:
       after_success:
         - cd src && fossa test
 
-notifications:
-  webhooks: https://app.fossa.io/hooks/travisci
