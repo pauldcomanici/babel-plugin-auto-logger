@@ -10,7 +10,7 @@ const service = {};
  * Get source file path
  *
  * @param {Object} state - node state
- * @returns {String} path to the source file where we will add logging
+ * @return {String} path to the source file where we will add logging
  */
 service.get = (state) => {
   const {

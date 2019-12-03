@@ -26,12 +26,12 @@ function babelPluginAutoLogger(api) {
   // return plugin data
   return {
     name: 'babel-plugin-auto-logger',
+    post: setup.post,
     pre: setup.pre,
     visitor: {
-      Program: visitors.program,
       'Function|CatchClause': visitors.insertExpressionStatement,
+      Program: visitors.program,
     },
-    post: setup.post,
   };
 
 }

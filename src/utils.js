@@ -246,7 +246,7 @@ privateApi.getName = (path) => {
  *
  * @param {String|RegExp} matcher - regular expression or empty string
  * @param {String} value - source for the code or function name
- * @returns {Boolean} matched
+ * @return {Boolean} matched
  */
 privateApi.testMatcher = (matcher, value) => (
   matcher && matcher.test(value) || false

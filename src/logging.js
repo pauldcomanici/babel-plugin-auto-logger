@@ -50,7 +50,7 @@ privateApi.supportedLogLevels = [
  * If it has truthy value as string returns RegExp based on it, if not return empty object.
  *
  * @param {String} [matcher] - value for the matcher
- * @returns {RegExp|String} updatedMatcher
+ * @return {RegExp|String} updatedMatcher
  */
 privateApi.getMatcher = (matcher) => (
   (matcher && typeof matcher === 'string' && new RegExp(matcher)) || ''

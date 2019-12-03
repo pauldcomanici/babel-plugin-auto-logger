@@ -10,6 +10,12 @@
 > - :nail_care:  [Polish]
 
 
+## v-next
+* :house: Add .whitesource configuration file (#14)
+* :house: Remove fossa notification with webhook
+* :house: Update dependencies
+* :house: Update eslint configuration & apply changes
+
 ## v1.1.1
 * :house: Enable FOSSA from CI
 * :house: Update dependencies
