@@ -11,22 +11,41 @@
     "ecmaVersion": 9,
     "sourceType": "module"
   },
+  "plugins": [
+    "import"
+  ],
   "rules": {
     "array-callback-return": 2,
     "array-bracket-spacing": [2, "never"],
     "arrow-body-style": [2, "as-needed"],
     "arrow-spacing": [2, {"before": true, "after": true}],
+    "block-scoped-var": 2,
     "brace-style": [2, "1tbs", {"allowSingleLine": true}],
     "camelcase": [2, {"properties": "never"}],
+    "class-methods-use-this": 2,
     "comma-dangle": [2, "only-multiline"],
     "comma-spacing": [2, {"before": false, "after": true}],
     "comma-style": [2, "last"],
-    "dot-notation": [2, {"allowKeywords": true}],
+    "complexity": [2, {
+      "max": 20
+    }],
+    "consistent-return": [2, {
+      "treatUndefinedAsUnspecified": false
+    }],
+    "curly": [2, "all"],
+    "default-case": 2,
+    "dot-location": [2, "property"],
+    "dot-notation": [2, {
+      "allowKeywords": false
+    }],
     "eol-last": 2,
     "eqeqeq": [2, "always"],
     "func-call-spacing": [2, "never"],
     "guard-for-in": 2,
+    "import/no-absolute-path": 2,
     "import/no-cycle": 2,
+    "import/no-unresolved": 2,
+    "import/no-useless-path-segments": 2,
     "import/order": [2, {
       "groups": [
         "builtin",
@@ -37,20 +56,18 @@
       ],
       "newlines-between": "ignore"
     }],
-    "import/no-unresolved": 2,
-    "import/no-useless-path-segments": 2,
     "indent": [2, 2, {
       "ArrayExpression": 1,
       "MemberExpression": 1,
       "ObjectExpression": 1,
       "SwitchCase": 1
     }],
-    "jsx-quotes": [2, "prefer-double"],
     "key-spacing": [2, {"beforeColon": false, "afterColon": true}],
     "keyword-spacing": [2, {"before": true, "after": true}],
     "lines-around-comment": [2, {
       "beforeBlockComment": true
     }],
+    "max-classes-per-file": [2, 1],
     "max-len": [2, {
       "code": 120,
       "ignoreComments": true,
@@ -61,6 +78,7 @@
     "newline-per-chained-call": [2, {"ignoreChainWithDepth": 2}],
     "no-alert": 2,
     "no-array-constructor": 2,
+    "no-await-in-loop": 2,
     "no-class-assign": 2,
     "no-caller": 2,
     "no-cond-assign": [2, "always"],
@@ -69,13 +87,25 @@
     "no-const-assign": 2,
     "no-debugger": 2,
     "no-duplicate-imports": 2,
+    "no-eq-null": 2,
+    "no-eval": 2,
+    "no-extend-native": 2,
+    "no-extra-bind": 2,
+    "no-extra-label": 2,
+    "no-floating-decimal": 2,
+    "no-implicit-coercion": 2,
+    "no-implicit-globals": 2,
     "no-else-return": [2, {
       "allowElseIf": false
     }],
     "no-empty": [2, {
       "allowEmptyCatch": true
     }],
-    "no-empty-function": 2,
+    "no-empty-function": [2, {
+      "allow": [
+        "generatorMethods"
+      ]
+    }],
     "no-extra-semi": 2,
     "no-implied-eval": 2,
     "no-irregular-whitespace": 2,
@@ -101,6 +131,16 @@
         // test for const/let that are in sub-describe (available only under main describe)
         "selector": "CallExpression[callee.type='Identifier'][callee.name='describe'] BlockStatement BlockStatement VariableDeclaration",
         "message": "const or let should be used only at suite top-level (main describe)"
+      },
+      {
+        // test for it.only
+        "selector": "CallExpression[callee.type='MemberExpression'][callee.object.type='Identifier'][callee.object.name='it'][callee.property.name='only']",
+        "message": "We should not have it.only in tests"
+      },
+      {
+        // test for describe.only
+        "selector": "CallExpression[callee.type='MemberExpression'][callee.object.type='Identifier'][callee.object.name='describe'][callee.property.name='only']",
+        "message": "We should not have describe.only in tests"
       }
     ],
     "no-self-assign": 2,
