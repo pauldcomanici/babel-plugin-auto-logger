@@ -1,10 +1,10 @@
 // testing file
-import options, {privateApi} from './../src/options';
+import options, {privateApi} from '../src/options';
 
 // dependencies
 // services
-import loggingData from './../src/logging';
-jest.mock('./../src/logging');
+import loggingData from '../src/logging';
+jest.mock('../src/logging');
 
 
 describe('options.js', () => {

@@ -1,9 +1,9 @@
 // testing file
-import loggingData, {privateApi} from './../src/logging';
+import loggingData, {privateApi} from '../src/logging';
 
 // dependencies
 // constants
-import consts from './../src/constants';
+import consts from '../src/constants';
 
 describe('logging.js', () => {
   let testSpecificMocks;
@@ -52,7 +52,7 @@ describe('logging.js', () => {
     });
 
     it('returns empty string when matcher has falsy value', () => {
-      testSpecificMocks.matcher =  null;
+      testSpecificMocks.matcher = null;
 
       expect(privateApi.getMatcher(testSpecificMocks.matcher)).toBe(
         ''
@@ -91,8 +91,8 @@ describe('logging.js', () => {
     beforeEach(() => {
       testSpecificMocks.logLevel = 'warn';
       testSpecificMocks.logLevelData = {
-        matchSource: '.*specific-file-name[^/]+js',
         matchFunctionName: '.*awesomeName$',
+        matchSource: '.*specific-file-name[^/]+js',
         methodName: 'warnMethod',
       };
     });

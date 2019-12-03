@@ -1,9 +1,9 @@
 // testing file
-import setup from './../src/setup';
+import setup from '../src/setup';
 
 // dependencies
 // services
-import options from './../src/options';
+import options from '../src/options';
 
 describe('setup.js', () => {
 

@@ -30,7 +30,9 @@
   "scripts": {
     "build": "npm run lint && npm run test-coverage && npm run snyk-test && npm run compile && npm run test-e2e",
     "compile": "rimraf lib && babel src --out-dir lib",
-    "lint": "eslint ./src",
+    "lint": "npm run lint-source && npm run lint-tests",
+    "lint-source": "eslint ./src",
+    "lint-tests": "eslint ./__tests__",
     "prepare": "npm run snyk-protect",
     "prepublishOnly": "npm run build",
     "postinstall": "node ./scripts/postinstall.js || exit 0",

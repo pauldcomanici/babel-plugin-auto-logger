@@ -1,13 +1,14 @@
+import * as types from '@babel/types';
+
 // testing file
-import visitors from './../src/visitors';
+import visitors from '../src/visitors';
 
 // dependencies
-import * as types from '@babel/types';
 jest.mock('@babel/types');
 // services
-import utils from './../src/utils';
+import utils from '../src/utils';
 // constants
-import consts from './../src/constants';
+import consts from '../src/constants';
 
 
 describe('visitors.js', () => {
@@ -94,7 +95,7 @@ describe('visitors.js', () => {
 
       expect(types.identifier).toHaveBeenCalledWith(
         utils.getLoggerName()
-      )
+      );
     });
 
     it('when path is valid and logger was not already imported or is not the default logger => will prepare default import specifier by calling `types.importDefaultSpecifier`', () => {
@@ -102,7 +103,7 @@ describe('visitors.js', () => {
 
       expect(types.importDefaultSpecifier).toHaveBeenCalledWith(
         types.identifier()
-      )
+      );
     });
 
     it('when path is valid and logger was not already imported or is not the default logger => will prepare logger source path by calling `utils.getLoggerSource`', () => {
@@ -110,7 +111,7 @@ describe('visitors.js', () => {
 
       expect(utils.getLoggerSource).toHaveBeenCalledWith(
         testSpecificMocks.state
-      )
+      );
     });
 
     it('when path is valid and logger was not already imported or is not the default logger => will prepare string literal value for the second argument of import declaration by calling `types.stringLiteral`', () => {
@@ -118,7 +119,7 @@ describe('visitors.js', () => {
 
       expect(types.stringLiteral).toHaveBeenCalledWith(
         utils.getLoggerSource()
-      )
+      );
     });
 
     it('when path is valid and logger was not already imported or is not the default logger => will prepare import declaration by calling `types.importDeclaration`', () => {
@@ -129,7 +130,7 @@ describe('visitors.js', () => {
           types.importDefaultSpecifier(),
         ],
         types.stringLiteral()
-      )
+      );
     });
 
     it('when path is not valid => nothing will happen', () => {

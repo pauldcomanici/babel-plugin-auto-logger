@@ -1,17 +1,18 @@
+import * as types from '@babel/types';
+
 // testing file
-import utils, {privateApi} from './../src/utils';
+import utils, {privateApi} from '../src/utils';
 
 // dependencies
-import * as types from '@babel/types';
 jest.mock('@babel/types');
 // services
-import loggingArguments from './../src/arguments';
-import loggingData from './../src/logging';
-jest.mock('./../src/logging');
-import sourceFile from './../src/source-file';
-jest.mock('./../src/source-file');
+import loggingArguments from '../src/arguments';
+import loggingData from '../src/logging';
+jest.mock('../src/logging');
+import sourceFile from '../src/source-file';
+jest.mock('../src/source-file');
 // constants
-import consts from './../src/constants';
+import consts from '../src/constants';
 
 
 describe('utils.js', () => {
@@ -730,7 +731,7 @@ describe('utils.js', () => {
     });
 
     it('returns empty string if the path does not represents a catch clause or catch member expression and there is matcher for function name', () => {
-      testSpecificMocks.state.babelPluginLoggerSettings.loggingData.levels.log.matchFunctionName = 'function name matcher';
+      testSpecificMocks.state.babelPluginLoggerSettings.loggingData.levels.log.matchFunctionName = 'function name matcher'; // eslint-disable-line max-len
 
       expect(privateApi.getDefaultLogLevelName(
         testSpecificMocks.path,
@@ -998,7 +999,7 @@ describe('utils.js', () => {
       testSpecificMocks.knownData = {
         ...testSpecificMocks.partialData,
         source: 'source-file',
-      }
+      };
     });
     afterEach(() => {
       sourceFile.get.mockClear();
@@ -1198,14 +1199,14 @@ describe('utils.js', () => {
         },
       };
       testSpecificMocks.state = {
+        babelPluginLoggerSettings: {
+          sourceExcludeMatcher: /.*/,
+          sourceMatcher: /.*/,
+        },
         file: {
           opts: {
             filename: '/Users/dec/src/modules/test/index.js',
           },
-        },
-        babelPluginLoggerSettings: {
-          sourceMatcher: /.*/,
-          sourceExcludeMatcher: /.*/,
         },
       };
     });

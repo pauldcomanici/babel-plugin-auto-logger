@@ -1,5 +1,5 @@
 // testing file
-import sourceFile from './../src/source-file';
+import sourceFile from '../src/source-file';
 
 
 describe('source-file.js', () => {
@@ -8,7 +8,7 @@ describe('source-file.js', () => {
   beforeEach(() => {
     testSpecificMocks = {};
   });
-  
+
   describe('get', () => {
     beforeEach(() => {
       testSpecificMocks.state = {

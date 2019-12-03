@@ -1,12 +1,12 @@
 // testing file
-import {babelPluginAutoLogger} from './../src/index';
+import {babelPluginAutoLogger} from '../src/index';
 
 // dependencies
 // services
-import setup from './../src/setup';
-jest.mock('./../src/setup');
-import visitors from './../src/visitors';
-jest.mock('./../src/visitors');
+import setup from '../src/setup';
+jest.mock('../src/setup');
+import visitors from '../src/visitors';
+jest.mock('../src/visitors');
 
 
 describe('index.js', () => {
@@ -38,8 +38,8 @@ describe('index.js', () => {
       post: setup.post,
       pre: setup.pre,
       visitor: {
-        Program: visitors.program,
         'Function|CatchClause': visitors.insertExpressionStatement,
+        Program: visitors.program,
       },
     });
   });

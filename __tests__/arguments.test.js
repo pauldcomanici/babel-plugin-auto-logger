@@ -1,11 +1,13 @@
-// testing file
-import loggingArguments, {privateApi} from './../src/arguments';
-
-// dependencies
 import * as types from '@babel/types';
-jest.mock('@babel/types');
+
+// testing file
+import loggingArguments, {privateApi} from '../src/arguments';
+
 // constants
-import consts from './../src/constants';
+import consts from '../src/constants';
+
+
+jest.mock('@babel/types');
 
 
 describe('arguments.js', () => {

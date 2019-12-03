@@ -11,8 +11,11 @@ node_js:
 jobs:
   include:
     - stage: validity
-      name: "Linting"
-      script: npm run lint
+      name: "Linting source"
+      script: npm run lint-source
+    - stage: validity
+      name: "Linting tests"
+      script: npm run lint-tests
     - stage: validity
       name: "Unit tests"
       script: npm run test-coverage && npm run report-coverage
