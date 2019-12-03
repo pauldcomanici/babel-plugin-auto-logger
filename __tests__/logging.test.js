@@ -124,7 +124,7 @@ describe('logging.js', () => {
           matchFunctionName: testSpecificMocks.logLevelData.matchFunctionName,
           matchFunctionNameRegExp: /.*awesomeName$/,
           matchSource: testSpecificMocks.logLevelData.matchSource,
-          matchSourceRegExp: /.*specific-file-name[^\/]+js/, // eslint-disable-line no-useless-escape
+          matchSourceRegExp: /.*specific-file-name[^/]+js/, // eslint-disable-line no-useless-escape
           methodName: testSpecificMocks.logLevelData.methodName,
         }
       );
