@@ -11,6 +11,9 @@
 
 
 ## v-next
+* 
+
+## v1.1.2
 * :house: Add .whitesource configuration file (#14)
 * :house: Remove fossa notification with webhook
 * :house: Update dependencies
