@@ -15,7 +15,7 @@
     "@babel/core": "7.7.5",
     "@babel/helper-plugin-test-runner": "7.7.4",
     "@babel/preset-env": "7.7.6",
-    "acorn": "7.1.0",
+    "acorn": "7.1.1",
     "babel-jest": "24.9.0",
     "codecov": "3.6.1",
     "eslint": "6.7.2",
